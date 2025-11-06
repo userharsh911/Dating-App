@@ -11,8 +11,9 @@ const app = express();
 app.use(express.json());
 app.use(cookieParser());
 const corsOptions = {
-    origin:'*',
-    method:["get","post","put","delete"]
+    origin:'http://localhost:5173',
+    method:["get","post","put","delete"],
+    credentials:true,
 }
 
 app.use(cors(corsOptions))

@@ -5,21 +5,23 @@ import userSchema from "../models/user.model.js";
 
 export const signUpRouter = async(req,res)=>{
     try {
-        const {name, email, password, gender,} = req.body;
-        if(!name || !email || !password){
-            return res.status(402).json({message:"credentials are not provided"});
+        const {name, email, password, gender, age} = req.body;
+        console.log("getting signIN ",req.body)
+        if(!name || !email || !password || !gender){
+            return res.status(401).json({message:"credentials are not provided"});
         }
         const hashed_pass = await hashedPassword(password,res);
         
         const user = new userSchema({
-            name,password:hashed_pass,email,gender
+            name,password:hashed_pass,email,gender,age
         })
 
         const userModel = await user.save();
 
-        return res.json({message:"succesfully singup", userData:userModel});
+        return res.status(201).json({message:"succesfully singup", userData:userModel});
     } catch (error) {
         console.log("error while singing ",error);
+        throw res.status(401).json({message:error.errorResponse})
     }
 }
 
@@ -41,9 +43,10 @@ export const loginRouter = async(req,res)=>{
         }
         console.log("user id ",newUser._id);
         createJSONwebToken(newUser._id,res);
-        return res.json({message:"successfully login",newUser})
+        return res.status(200).json({message:"successfully login",newUser})
     } catch (error) {
-        console.log("error ",error)
+        console.log("error while logging in",error)
+        throw res.status(401).json({message:error.errorResponse})
     }
 }
 
@@ -58,10 +61,16 @@ export const logoutRouter = async(req,res)=>{
 
     } catch (error) {
         console.log("error while loggin out ")
+        throw res.status(401).json({message:error.errorResponse})
     }
 }
 
 export const checkAuth = async(req,res)=>{
-    
-    return res.json({message:"user getted"});
+    try {
+        const user = req.user;
+        console.log("myuser ",user)
+        return res.status(200).json({message:"user getted",user});
+    } catch (error) {
+        throw res.status(401).json({message:error.errorResponse})
+    }
 }

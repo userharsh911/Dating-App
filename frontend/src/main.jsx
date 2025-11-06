@@ -10,22 +10,23 @@ import Profile from '../pages/Profile.jsx';
 import Setting from '../pages/Setting.jsx';
 import Login from '../pages/Login.jsx';
 import Signup from '../pages/Signup.jsx';
+import AuthenticatedRoute from '../components/AuthenticatedRoute.jsx';
 
 const router = createBrowserRouter(
   createRoutesFromElements(
     <Route path='/' element={<App />}>
         <Route path="" element={<Home/>}/>
-        <Route path="matches" element={<Matches/>}/>
-        <Route path="explore" element={<Explore/>}/>
-        <Route path="profile" element={<Profile/>}/>
-        <Route path="settings" element={<Setting/>}/>
-        <Route path="login" element={<Login/>}/>
-        <Route path="signup" element={<Signup/>}/>
+        <Route path="matches" element={<AuthenticatedRoute auth={true}><Matches/></AuthenticatedRoute>}/>
+        <Route path="explore" element={<AuthenticatedRoute auth={true}><Explore/></AuthenticatedRoute>}/>
+        <Route path="profile" element={<AuthenticatedRoute auth={true}><Profile/></AuthenticatedRoute>}/>
+        <Route path="settings" element={<AuthenticatedRoute auth={true}><Setting/></AuthenticatedRoute>}/>
+        <Route path="login" element={<AuthenticatedRoute auth={false}><Login/></AuthenticatedRoute> }/>
+        <Route path="signup" element={<AuthenticatedRoute auth={false}><Signup/></AuthenticatedRoute>}/>
     </Route>
   )
 )
 
-createRoot(document.getElementById('root')).render(
+createRoot(document.getElementById('root')).render( 
   <StrictMode>
     <RouterProvider router={router}>
       <App />

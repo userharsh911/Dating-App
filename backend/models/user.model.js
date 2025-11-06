@@ -28,6 +28,9 @@ const UserSchema = mongoose.Schema({
     approveList:[{
         type:String,
     }],
+    description:{
+        type:String
+    },
     
 
 
