@@ -4,6 +4,7 @@ import dotenv from 'dotenv';
 import cors from "cors"
 import authRouter from '../routes/auth.routes.js';
 import cookieParser from "cookie-parser"
+// import mainRouter from '../routes/mainRouter.routes.js';
 dotenv.config();
 
 const app = express();
@@ -20,6 +21,7 @@ const PORT = process.env.PORT || 5000;
 
 // app.use("/api",authRouter);
 app.use("/api/auth",authRouter);
+// app.use("/api",mainRouter)
 
 
 mongoose.connect(process.env.MONGO_URI).then(()=>{

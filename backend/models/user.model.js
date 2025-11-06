@@ -18,6 +18,18 @@ const UserSchema = mongoose.Schema({
         type:String,
         required:true,
     },
+    age:{
+        type:Number,
+        required:true,
+    },
+    blockList:[{
+        type:String,
+    }],
+    approveList:[{
+        type:String,
+    }],
+    
+
 
 },{timestamps:true})
 

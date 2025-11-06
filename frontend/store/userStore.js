@@ -1,8 +1,16 @@
 import { create } from 'zustand'
+import axiosInstance from '../api/axiosApi';
+const userStore = create((set) => ({
+  user:null,
+  getUser: async()=>{
+    const user = await axiosInstance.get('/auth/checkauth')
+    console.log("user get successfully ", user)
+  },
+  SignUpAccount: async(args)=>{
+    const userData = await axiosInstance.post("/auth/signup");
+    console.log("user signup data ",userData)
+  }
 
-const useStore = create((set) => ({
-  count: 1,
-  inc: () => set((state) => ({ count: state.count + 1 })),
 }))
 
-export default useStore;
+export default userStore;

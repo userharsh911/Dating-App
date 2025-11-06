@@ -60,3 +60,8 @@ export const logoutRouter = async(req,res)=>{
         console.log("error while loggin out ")
     }
 }
+
+export const checkAuth = async(req,res)=>{
+    
+    return res.json({message:"user getted"});
+}
