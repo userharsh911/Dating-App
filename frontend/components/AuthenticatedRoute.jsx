@@ -8,7 +8,7 @@ const AuthenticatedRoute = ({auth, children}) => {
         console.log("AuthenticatedRoute - USER : ",user);
     },[user])
     if(!user && auth){
-        return <Navigate to="/login" />;
+        return <Navigate to="/" />;
     }else{
   return (
     <div>

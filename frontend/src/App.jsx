@@ -14,7 +14,7 @@ function App() {
 
   return (
     <>
-      <div className="flex h-lvh bg-base-300 w-full">
+      <div className="flex h-lvh bg-base-200 w-full">
         <Toaster />
         <Header/>
           <main className="w-full">

@@ -1,9 +1,36 @@
 import mongoose from "mongoose";
 
 const UserSchema = mongoose.Schema({
+
     name:{
         type:String,
         required:true
+    },
+    hobbies:[{
+        type:String
+    }],
+    height:{
+        type:String
+    },
+    location:{
+        type:String
+    },
+    branch:{
+        type:String
+    },
+    photos:[{
+        url:{
+            type:String
+        },
+        id:{
+           type:String 
+        }
+    }],
+    profilePicLink:{
+        type:String
+    },
+    profilePublicId:{
+        type:String
     },
     email:{
         type:String,
@@ -31,6 +58,7 @@ const UserSchema = mongoose.Schema({
     description:{
         type:String
     },
+
     
 
 

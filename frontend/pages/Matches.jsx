@@ -1,8 +1,11 @@
 import React from 'react'
+import UserCard from '../components/UserCard/UserCard'
 
 const Matches = () => {
   return (
-    <div>Matches</div>
+    <div>
+        <UserCard/>
+    </div>
   )
 }
 

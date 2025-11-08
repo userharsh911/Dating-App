@@ -13,7 +13,7 @@ import Signup from '../pages/Signup.jsx';
 import AuthenticatedRoute from '../components/AuthenticatedRoute.jsx';
 
 const router = createBrowserRouter(
-  createRoutesFromElements(
+  createRoutesFromElements( 
     <Route path='/' element={<App />}>
         <Route path="" element={<Home/>}/>
         <Route path="matches" element={<AuthenticatedRoute auth={true}><Matches/></AuthenticatedRoute>}/>

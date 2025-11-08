@@ -2,6 +2,7 @@ import { create } from 'zustand'
 import axiosInstance from '../api/axiosApi';
 const userStore = create((set) => ({
   user:null,
+  allUsers:null,
   getUser: async()=>{
     try {
       const response = await axiosInstance.get('/auth/checkauth')
@@ -42,6 +43,25 @@ const userStore = create((set) => ({
     } catch (error) {
       throw error.response?.data?.message;
     }
+  },
+  getMatchesUsers : async()=>{
+    try {
+      const response = await axiosInstance.get("/main/getallusers")
+      console.log("all users ",response.data.users);
+      set({allUsers:response.data.users})
+      return response.data?.users;
+    } catch (error) {
+      throw error.response?.data?.message
+    }
+  },
+  UpdateProfilePic: async(imageLink)=>{
+    try {
+      const response = await axiosInstance.post("/main/updateprofilepic",{imageLink});
+
+    } catch (error) {
+      throw error.response?.data?.message
+    }
+
   }
 }))
 
