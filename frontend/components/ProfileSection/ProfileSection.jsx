@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Heart,
   MapPin,
@@ -12,7 +12,7 @@ import {
   Plane,
   Edit,
   Settings,
-  MessageCircle,
+  Pencil,
   Gift,
   Star,
 } from "lucide-react";
@@ -20,6 +20,7 @@ import userStore from "../../store/userStore";
 import base64ImageConvert from "../../constant/fileReader";
 import ProfileBanner from "../ProfileBanner/ProfileBanner";
 import AccountForm from "../AccountForm/AccountForm";
+import toast from "react-hot-toast";
 
 const ProfileSecion = () => {
   const [activeTab, setActiveTab] = useState("about");
@@ -28,12 +29,12 @@ const ProfileSecion = () => {
   console.log("Profile Rendered", user);
   const profile = {
     name: user?.name,
+    profilePic : user?.profilePicLink,
     age: user?.age,
-    Branch: user?.branch || "Computer Science Engineering",
-    location: user?.location || "New York, USA",
+    Branch: user?.branch || "N/D",
+    location: user?.location || "N/D",
     bio: "Adventure seeker with a passion for photography and good coffee. Love exploring new places and trying different cuisines. Looking for someone genuine who can make me laugh.",
-    education: "IIT Delhi",
-    height: "5'6\"",
+    height: user?.height || "N/D",
     interests: [
       "Photography",
       "Travel",
@@ -60,6 +61,9 @@ const ProfileSecion = () => {
       url: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=400",
     },
   ];
+  useEffect(()=>{
+    console.log("user updated ",user);
+  },[user]);
 
   const getInterestIcon = (interest) => {
     const icons = {
@@ -76,11 +80,21 @@ const ProfileSecion = () => {
     e.preventDefault();
     console.log("file selected ", image);
     let baseImage = await base64ImageConvert(image);
-    await UpdateProfilePic(baseImage);
+    toast.promise(
+      UpdateProfilePic(baseImage).then(()=>{
+        setImage(null);
+      }),
+      {
+        loading: 'Saving...',
+        success: <b>saved!</b>,
+        error: <b>Could not save.</b>,
+      }
+    );
   };
 
   return (
-    <div className="h-dvh overflow-y-scroll bg-base-200 text-base-content">
+    <>
+    { user && <div className="h-dvh overflow-y-scroll bg-base-200 text-base-content">
       {/* Header */}
       <div className="sticky top-0 z-50 bg-base-200">
         <div className="max-w-4xl mx-auto px-2 sm:px-4 py-4 flex justify-between items-center">
@@ -109,7 +123,7 @@ const ProfileSecion = () => {
 
       <div className="max-w-4xl mx-auto px-2 sm:px-4 pb-24 sm:pb-8">
         {/* Main Photo Grid */}
-        <ProfileBanner />
+        <ProfileBanner image={profile.profilePic}/>
 
         {/* Profile Header */}
         <div className="mb-6">
@@ -230,10 +244,13 @@ const ProfileSecion = () => {
                 {profile.Branch}
               </span>
             </div>
-            <div className="flex items-center gap-2 px-3 sm:px-4 py-2 rounded-full bg-base-300">
-              <GraduationCap className="w-4 h-4 text-base-content" />
-              <span className="text-xs sm:text-sm text-base-content">
-                <label htmlFor="my_modal_7" className="btn">
+            <div className="flex items-center gap-2 px-3 bg-primary sm:px-4 py-2 rounded-full">
+              <Pencil className="w-4 h-4 text-primary-content" />
+              <span className="text-xs sm:text-sm ">
+                <label
+                  htmlFor="my_modal_7"
+                  className="cursor-pointer flex text-primary-content  font-bold items-center gap-1"
+                >
                   Edit
                 </label>
                 <input
@@ -243,7 +260,7 @@ const ProfileSecion = () => {
                 />
                 <div className="modal" role="dialog">
                   <div className="modal-box">
-                    <AccountForm/>
+                    <AccountForm />
                   </div>
                   <label className="modal-backdrop" htmlFor="my_modal_7">
                     Close
@@ -275,9 +292,12 @@ const ProfileSecion = () => {
         {activeTab === "about" && (
           <div className="space-y-6">
             <div>
-              <h3 className="text-base sm:text-lg font-semibold mb-3 text-base-content">
-                About Me
-              </h3>
+              <div className="flex gap-5 items-center mb-3">
+                <h3 className="text-base sm:text-lg font-semibold text-base-content">
+                  About Me
+                </h3>
+                <Edit className="w-4 h-4 sm:w-5 sm:h-5 cursor-pointer" />
+              </div>
               <p className="text-base-content/85 leading-relaxed text-sm sm:text-base">
                 {profile.bio}
               </p>
@@ -310,10 +330,20 @@ const ProfileSecion = () => {
         )}
 
         {activeTab === "interests" && (
-          <div>
-            <h3 className="text-base sm:text-lg font-semibold mb-4 text-base-content">
-              Interests & Hobbies
-            </h3>
+          <div className="w-full">
+            <div className="flex w-full gap-4 mb-4 items-center justify-between">
+              <h3 className="text-base sm:text-lg font-semibold mb-4 text-base-content">
+                Interests & Hobbies
+              </h3>
+              <div className="join">
+                <div>
+                  <label className="input outline-none join-item border-none">
+                    <input type="text" placeholder="Add interest" required />
+                  </label>
+                </div>
+                <button className="btn btn-neutral join-item" >Add</button>
+              </div>
+            </div>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 sm:gap-3">
               {profile.interests.map((interest) => {
                 const Icon = getInterestIcon(interest);
@@ -370,7 +400,8 @@ const ProfileSecion = () => {
           </div>
         </div> */}
       </div>
-    </div>
+    </div>}
+    </>
   );
 };
 

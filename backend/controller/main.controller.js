@@ -10,25 +10,40 @@ export const getAllUsers = async(req,res)=>{
                 }
             }
         );
-        console.log("all users : ",users);
-        return res.status(200).json({message:"successed",users})
+        return res.status(200).json({message:"success",users})
     } catch (error) {
-        throw res.status(402).json({message:"Try again"})
+        throw res.status(402).json({message:error.errorResponse})
     }
 }
 export const updateProfilePic = async(req,res)=>{
     try {
         const user = req.user;
-        console.log("user ",user)
         const {imageLink} = req.body;
-        console.log("Image links : ")
+        if(user?.profilePublicId){
+            await cloudinary.uploader.destroy(user?.profilePublicId);
+        }
         const uploadResult = await cloudinary.uploader.upload(imageLink);
         const UpdatedUser = await userSchema.findOneAndUpdate({_id:user._id},{profilePicLink:uploadResult.secure_url,profilePublicId:uploadResult.public_id},{new:true})
         console.log("Image upload result ", uploadResult,UpdatedUser);
-        // user.
+        return res.status(200).json({message:"success",UpdatedUser})
 
     } catch (error) {
         console.log(error)
-        throw res.status(404).json({message:"Try again : Image uploadation error"})
+        throw res.status(404).json({message:error.errorResponse})
+    }
+}
+export const editProfile = async(req,res)=>{
+    const user = req.user;
+    const data = req.body;
+    try {
+        const updatedUser = await userSchema.findOneAndUpdate({_id:user._id},data,{new:true});
+        if(!updatedUser){
+            return res.status(402).json({message:"Error while updating: Try again"})
+        }
+        console.log("updated user after update ",updatedUser);
+        return res.status(200).json({message:"successfully updated",updatedUser});
+    } catch (error) {
+        console.log("error while updating ",error);
+        throw res.status(401).json({message:error.errorResponse});
     }
 }

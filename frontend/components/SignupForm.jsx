@@ -1,52 +1,51 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Mail, LockKeyhole, CalendarDays, MapPin , User, Ruler, GraduationCap      } from 'lucide-react';
 import toast, { Toaster } from 'react-hot-toast';
 import { useForm, } from "react-hook-form"
 import userStore from '../store/userStore';
 import { useNavigate } from 'react-router-dom';
 const SignupForm = () => {
-    const {SignUpAccount, user} = userStore(state=>state);
+    const {SignUpAccount, user, UpdateUserProfile, LoginAccount} = userStore(state=>state);
     const {register, handleSubmit, watch} = useForm({
         defaultValues:{
             name:user?.name,
             age:user?.age,
-            hobbies:user?.hobbies,
             height:user?.height,
             branch:user?.branch,
             location:user?.location,
-            gender:user?.gender,
 
         }
     });
     const navigate = useNavigate()
     const [loader, setLoader] = useState(false);
-    const [selectedGender, setSelectedGender] = useState(null);   
+    const [selectedGender, setSelectedGender] = useState(null); 
+      
     const onSubmit = async(data)=>{
-        console.log("form data ",data);
-        const {name, email, password, age} = data;
+        console.log("form data ",data,selectedGender);
+        const {name, branch, height, location, age, email, password} = data;
         setLoader(true)
         try {
             if(!/^[A-Za-z]{3,}(?: [A-Za-z]+)*$/.test(name)){
                 return toast.error("Invalid name");
             }
-            if(!/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[A-Za-z]{2,}$/.test(email)){
+            if(!user && !/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[A-Za-z]{2,}$/.test(email)){
                 return toast.error("Invalid email");
             }
-            if(!/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/.test(password)){
+            if(!user && !/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/.test(password)){
                 return toast.error("try a stronger password");
             }
             if(age <17 || age >= 80){
                 return toast.error("invalid age provided");
             }
-            console.log("selected gender ", selectedGender!="Male");
-            if(selectedGender !="Male"){
-                return toast.error("select a gender");
-            }
             console.log("signup data",{name, email, password, age, selectedGender});
             if(!user){
                 toast.promise(
                     SignUpAccount({name, email, password, age, gender:selectedGender}).then(()=>{
-                        setLoader(false)
+                        setLoader(false);
+                        LoginAccount({email, password}).then(()=>{
+                            navigate('/')
+                        })
+
                     }),
                     {
                         loading: 'signing... ⏳',
@@ -55,6 +54,19 @@ const SignupForm = () => {
                     }
                 )
             }
+            if(user){
+                toast.promise(
+                    UpdateUserProfile({name, age, gender:selectedGender, location, branch, height}).then(()=>{
+                        setLoader(false)
+                    }),
+                    {
+                        loading: 'updating... ⏳',
+                        success: 'successfully updated 😀',
+                        error: 'Error while updating your account 🥲',
+                    }
+                )
+            }
+            document.getElementById("my_modal_7").click();
             setLoader(false)
         } catch (error) {
             setLoader(false)
@@ -63,6 +75,9 @@ const SignupForm = () => {
     }
     const formValues = watch();
 
+    useEffect(()=>{
+        setSelectedGender(user?.gender);
+    },[user?.gender])
 
 return (
     
@@ -97,10 +112,9 @@ return (
                     <div className="flex items-center justify-center border-b-2 border-base-300 pb-2 gap-3">
                         <Mail size={16} strokeWidth={1} />
                         <input 
-                            {...register("email")}
+                            {...register("email",{required:false})}
                             type="email" placeholder="email" 
                             className="input border-none shadow-none outline-none" 
-                            required = {!user}
                         />
                     </div>
                 </div>}
@@ -111,10 +125,9 @@ return (
                     <div className="flex items-center justify-center border-b-2 border-base-300 pb-2 gap-3">
                         <LockKeyhole size={16} strokeWidth={1} />
                         <input
-                            {...register("password")}
+                            {...register("password",{required:false})}
                             type="password" placeholder="password" 
                             className="input border-none shadow-none outline-none" 
-                            required= {!user}
                         />
                     </div>
                 </div>}
@@ -136,7 +149,7 @@ return (
                         <p>{formValues.age}</p>
                     </div>
                 </div>
-                <div className="form-control">
+                {user && <div className="form-control">
                     <label className="label">
                         
                     </label>
@@ -149,8 +162,8 @@ return (
                         
                         />
                     </div>
-                </div>
-                <div className="form-control">
+                </div>}
+                {user && <div className="form-control">
                     <label className="label">
                         
                     </label>
@@ -163,8 +176,8 @@ return (
                         
                         />
                     </div>
-                </div>
-                <div className="form-control">
+                </div>}
+                {user && <div className="form-control">
                     <label className="label">
                         
                     </label>
@@ -177,7 +190,7 @@ return (
                         
                         />
                     </div>
-                </div>
+                </div>}
                 <div className="form-control">
                     <label className="label">
                         
@@ -185,10 +198,11 @@ return (
                     <div className="">
                         <p className='pb-6'>Select gender :</p>
                         <div className="filter">
-                            <input className="btn filter-reset" type="radio" name="metaframeworks" aria-label="All"/>
-                            <input className="btn" type="radio" onClick={()=>setSelectedGender("Male")} name="metaframeworks" aria-label="Male"/>
-                            <input className="btn" type="radio" onClick={()=>setSelectedGender("Female")} name="metaframeworks" aria-label="Female"/>
-                            <input className="btn" type="radio" onClick={()=>setSelectedGender("Spectrum")} name="metaframeworks" aria-label="Spectrum"/>
+                            <input className="btn filter-reset" onClick={()=>setSelectedGender('')} type="radio" name="metaframeworks" aria-label="All"/>
+                            <input className="btn" type="radio" checked={selectedGender=="Male"} onChange={()=>setSelectedGender("Male")} name="metaframeworks" aria-label="Male"/>
+                            <input className="btn" type="radio" checked={selectedGender=="Female"} onChange={()=>setSelectedGender("Female")} name="metaframeworks" aria-label="Female"/>
+                            <input className="btn" type="radio" checked={selectedGender=="Spectrum"} onChange={()=>setSelectedGender("Spectrum")} name="metaframeworks" aria-label="Spectrum"/>
+
                         </div>
                     </div>
                 </div>
@@ -197,7 +211,7 @@ return (
                         !user ?
                         (loader ? <button className="btn btn-primary">Signing...</button> :
                         <button className="btn btn-primary">Sign Up</button>) :
-                        (loader ? <button className="btn btn-primary">Editing...</button> :
+                        (loader ? <button className="btn btn-primary" disabled>Editing...</button> :
                         <button className="btn btn-primary">Edit</button>)
                     }
 

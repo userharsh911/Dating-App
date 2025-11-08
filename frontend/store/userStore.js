@@ -10,13 +10,13 @@ const userStore = create((set) => ({
       console.log("user get successfully ",response.data)
       return response?.data?.user
     } catch (error) {
-      throw console.log("error while authenticating ",error.response?.data?.message)
+      console.log("useuse ",error)
+      throw error.response?.data?.message
     }
   },
   SignUpAccount: async(args)=>{
     try {
       const userData = await axiosInstance.post("/auth/signup",args);
-      console.log("user signup data ",userData)
       return userData
     } catch (error) {
       console.log("error while signing up ",error.response?.data?.message)
@@ -57,11 +57,22 @@ const userStore = create((set) => ({
   UpdateProfilePic: async(imageLink)=>{
     try {
       const response = await axiosInstance.post("/main/updateprofilepic",{imageLink});
-
+      set({user:response.data.UpdatedUser});
+      return response.data;
     } catch (error) {
-      throw error.response?.data?.message
+      throw error.response?.data?.message;
     }
 
+  },
+  UpdateUserProfile: async(data)=>{
+    try {
+      const response = await axiosInstance.put('/main/editprofile',data);
+      set({user:response.data.updatedUser})
+    } catch (error) {
+      console.log("error while updating user profile");
+      throw error.response?.data?.message;
+
+    }
   }
 }))
 
