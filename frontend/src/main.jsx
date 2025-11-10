@@ -11,12 +11,14 @@ import Setting from '../pages/Setting.jsx';
 import Login from '../pages/Login.jsx';
 import Signup from '../pages/Signup.jsx';
 import AuthenticatedRoute from '../components/AuthenticatedRoute.jsx';
+import More from '../pages/More.jsx';
 
 const router = createBrowserRouter(
   createRoutesFromElements( 
     <Route path='/' element={<App />}>
         <Route path="" element={<Home/>}/>
         <Route path="matches" element={<AuthenticatedRoute auth={true}><Matches/></AuthenticatedRoute>}/>
+        <Route path="matches/moredetails" element={<AuthenticatedRoute auth={true}><More/></AuthenticatedRoute>}/>
         <Route path="explore" element={<AuthenticatedRoute auth={true}><Explore/></AuthenticatedRoute>}/>
         <Route path="profile" element={<AuthenticatedRoute auth={true}><Profile/></AuthenticatedRoute>}/>
         <Route path="settings" element={<AuthenticatedRoute auth={true}><Setting/></AuthenticatedRoute>}/>
@@ -27,9 +29,9 @@ const router = createBrowserRouter(
 )
 
 createRoot(document.getElementById('root')).render( 
-  <StrictMode>
+  // <StrictMode>
     <RouterProvider router={router}>
       <App />
     </RouterProvider>
-  </StrictMode>,
+  // </StrictMode>,
 )

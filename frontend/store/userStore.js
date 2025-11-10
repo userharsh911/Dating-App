@@ -1,8 +1,15 @@
 import { create } from 'zustand'
 import axiosInstance from '../api/axiosApi';
-const userStore = create((set) => ({
+const userStore = create((set, get) => ({
   user:null,
-  allUsers:null,
+  allUsers:[],
+  selectedUser:null,
+  currentCardIndex: 0,
+  page: 0,
+  setCurrentCardIndex: (value)=>set({currentCardIndex:value}),
+  setAllUsers: (value)=>set({allUsers:value}),
+  setPage: (value)=>set({page:value}),
+  setSelectedUser: (user)=> set({selectedUser:user}),
   getUser: async()=>{
     try {
       const response = await axiosInstance.get('/auth/checkauth')
@@ -46,10 +53,11 @@ const userStore = create((set) => ({
   },
   getMatchesUsers : async()=>{
     try {
-      const response = await axiosInstance.get("/main/getallusers")
+      console.log("Pages ",get().page)
+      const response = await axiosInstance.get(`/main/getallusers/?page=${get().page}&limit=5`)
       console.log("all users ",response.data.users);
-      set({allUsers:response.data.users})
-      return response.data?.users;
+      set({allUsers:response.data.users});
+      return response.data;
     } catch (error) {
       throw error.response?.data?.message
     }
@@ -72,6 +80,24 @@ const userStore = create((set) => ({
       console.log("error while updating user profile");
       throw error.response?.data?.message;
 
+    }
+  },
+  EditUserHobby: async(hobby)=>{
+    try {
+      const response = await axiosInstance.put('/main/edithobby',hobby);
+      set({user:response.data.updatedUser})
+      return response.data
+    } catch (error) {
+      throw error.response?.data?.message;
+    }
+  },
+  EditUserDescription: async(data)=>{
+    try {
+      const response = await axiosInstance.put('/main/editdescription',data);
+      set({user:response.data.updatedUser})
+      return response.data;
+    } catch (error) {
+      throw error.response?.data?.message;
     }
   }
 }))

@@ -1,8 +1,11 @@
 import React from 'react'
+import FriendRequest from '../components/FriendRequest'
 
 const Setting = () => {
   return (
-    <div>Setting</div>
+    <div>
+      <FriendRequest/>
+    </div>
   )
 }
 
