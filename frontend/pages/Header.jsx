@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { Link, NavLink, useNavigate } from 'react-router-dom';
-import { PanelRightOpen, PanelRightClose, Home, Heart, Compass, User, Settings, LogIn, UserPlus, LogOut } from 'lucide-react';
+import { PanelRightOpen, PanelRightClose, Home, Heart, Compass, MessageSquare , User, Settings, LogIn, UserPlus, LogOut } from 'lucide-react';
 import userStore from '../store/userStore';
 
 const Header = () => {
@@ -11,7 +11,7 @@ const Header = () => {
     const routePages = [
         {name: 'Home', path: '/', icon: Home, isVerified: user ? true : false},
         {name: 'Matches', path: '/matches', icon: Heart, isVerified: user ? true : false},
-        {name: 'Explore', path: '/explore', icon: Compass, isVerified: user ? true : false},
+        {name: 'Messages', path: '/message', icon: MessageSquare , isVerified: user ? true : false},
         {name: 'Profile', path: '/profile', icon: User, isVerified: user ? true : false},
         {name: 'Settings', path: '/settings', icon: Settings, isVerified: user ? true : false},
         {name: 'Login', path: '/login', icon: LogIn, isVerified: !user ? true : false},
@@ -25,7 +25,7 @@ const Header = () => {
     return (
         <>
         {/* Desktop Sidebar */}
-        <div className={`hidden md:flex ${isShow ? 'w-64' : 'w-20'} bg-gradient-to-b from-base-200 to-base-100 h-full relative shadow-xl transition-all duration-300`}>
+        <div className={`hidden md:flex ${isShow ? 'w-64' : 'w-20'} bg-linear-to-b from-base-200 to-base-100 h-full relative shadow-xl transition-all duration-300`}>
             <div className='w-full flex flex-col'>
                 {/* Toggle Button */}
                 <div className='p-4 flex justify-end'>
@@ -91,7 +91,7 @@ const Header = () => {
         </div>
 
         {/* Mobile Bottom Navigation */}
-        <div className='md:hidden fixed bottom-0 left-0 right-0 bg-gradient-to-t from-base-200 to-base-100 shadow-2xl z-50 border-t border-base-300'>
+        <div className='md:hidden fixed bottom-0 left-0 right-0 bg-linear-to-t from-base-200 to-base-100 shadow-2xl z-50 border-t border-base-300'>
             <nav className='flex justify-around items-center px-2 py-3'>
                 {
                     routePages.map((vals)=>{

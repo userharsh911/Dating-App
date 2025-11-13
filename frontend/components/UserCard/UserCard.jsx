@@ -2,11 +2,14 @@ import React from "react";
 import userStore from "../../store/userStore";
 import { useEffect, useRef } from "react";
 import { useState } from "react";
+import { MessageCircleMore } from "lucide-react";
 import MatchCardSkeleton from "../MatchCardSkeleton/MatchCardSkeleton";
 import { useNavigate } from "react-router-dom";
+import messageStore from "../../store/message.store";
 
 const UserCard = () => {
   const { getMatchesUsers, allUsers, setSelectedUser, page, setPage } = userStore((state) => state);
+  const {messageList} = messageStore(state=>state);
   const [loading, setLoading] = useState(false);
   const [hasMore, setHasMore] = useState(true);
   const [initialLoad, setInitialLoad] = useState(true);
@@ -193,7 +196,7 @@ const UserCard = () => {
                           >
                             More
                           </button>
-                          <button className="btn btn-secondary flex-1">Pass</button>
+                          <button onClick={()=>messageList(user)} className="btn btn-secondary flex-1">Chat <MessageCircleMore size={20} /></button>
                         </div>
                       </div>
                     </div>

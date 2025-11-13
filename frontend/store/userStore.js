@@ -10,6 +10,7 @@ const userStore = create((set, get) => ({
   setAllUsers: (value)=>set({allUsers:value}),
   setPage: (value)=>set({page:value}),
   setSelectedUser: (user)=> set({selectedUser:user}),
+  setUser: (user)=> set({user:user}),
   getUser: async()=>{
     try {
       const response = await axiosInstance.get('/auth/checkauth')
@@ -20,7 +21,7 @@ const userStore = create((set, get) => ({
       console.log("useuse ",error)
       throw error.response?.data?.message
     }
-  },
+  },  
   SignUpAccount: async(args)=>{
     try {
       const userData = await axiosInstance.post("/auth/signup",args);

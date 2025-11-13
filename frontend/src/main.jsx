@@ -5,13 +5,13 @@ import App from './App.jsx'
 import {createBrowserRouter, RouterProvider, createRoutesFromElements, Route} from "react-router-dom";
 import Home from '../pages/home.jsx';
 import Matches from '../pages/Matches.jsx';
-import Explore from '../pages/Explore.jsx';
 import Profile from '../pages/Profile.jsx';
 import Setting from '../pages/Setting.jsx';
 import Login from '../pages/Login.jsx';
 import Signup from '../pages/Signup.jsx';
 import AuthenticatedRoute from '../components/AuthenticatedRoute.jsx';
 import More from '../pages/More.jsx';
+import Message from '../pages/Message.jsx';
 
 const router = createBrowserRouter(
   createRoutesFromElements( 
@@ -19,7 +19,7 @@ const router = createBrowserRouter(
         <Route path="" element={<Home/>}/>
         <Route path="matches" element={<AuthenticatedRoute auth={true}><Matches/></AuthenticatedRoute>}/>
         <Route path="matches/moredetails" element={<AuthenticatedRoute auth={true}><More/></AuthenticatedRoute>}/>
-        <Route path="explore" element={<AuthenticatedRoute auth={true}><Explore/></AuthenticatedRoute>}/>
+        <Route path="message" element={<AuthenticatedRoute auth={true}><Message/></AuthenticatedRoute>}/>
         <Route path="profile" element={<AuthenticatedRoute auth={true}><Profile/></AuthenticatedRoute>}/>
         <Route path="settings" element={<AuthenticatedRoute auth={true}><Setting/></AuthenticatedRoute>}/>
         <Route path="login" element={<AuthenticatedRoute auth={false}><Login/></AuthenticatedRoute> }/>

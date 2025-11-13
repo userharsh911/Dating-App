@@ -9,6 +9,9 @@ const UserSchema = mongoose.Schema({
     hobbies:[{
         type:String
     }],
+    messageList:[{
+        type:mongoose.Schema.Types.ObjectId
+    }],
     height:{
         type:String
     },
