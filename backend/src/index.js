@@ -9,7 +9,10 @@ import messageRouter from '../routes/message.routes.js';
 // import mainRouter from '../routes/mainRouter.routes.js';
 import { server, app } from '../socket/socketio.js';
 import path from "path"
+
+
 dotenv.config();
+const __dirname = path.resolve();
 
 // const app = express();
 app.use(cookieParser());
