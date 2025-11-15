@@ -8,6 +8,7 @@ import mainRouter from '../routes/mainRouter.routes.js';
 import messageRouter from '../routes/message.routes.js';
 // import mainRouter from '../routes/mainRouter.routes.js';
 import { server, app } from '../socket/socketio.js';
+import path from "path"
 dotenv.config();
 
 // const app = express();
