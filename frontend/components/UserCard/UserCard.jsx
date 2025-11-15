@@ -8,7 +8,7 @@ import { useNavigate } from "react-router-dom";
 import messageStore from "../../store/message.store";
 
 const UserCard = () => {
-  const { getMatchesUsers, allUsers, setSelectedUser, page, setPage } = userStore((state) => state);
+  const { getMatchesUsers, allUsers, setSelectedUser, page, setPage, onlineUsers } = userStore((state) => state);
   const {messageList} = messageStore(state=>state);
   const [loading, setLoading] = useState(false);
   const [hasMore, setHasMore] = useState(true);
@@ -166,9 +166,11 @@ const UserCard = () => {
                           <h2 className="card-title text-xl truncate">
                             {user.name}
                           </h2>
-                          <span className="text-lg font-semibold text-primary">
-                            {user.age}
-                          </span>
+                          {onlineUsers.includes(user._id) ? <span className="text-lg font-semibold text-primary">
+                            <div aria-label="success" className="status status-success"></div>
+                          </span> : 
+                          <div aria-label="warning" className="status status-warning"></div>
+                          }
                         </div>
 
                         <p className="text-base-content/70 text-sm mb-4 line-clamp-2">
@@ -196,7 +198,7 @@ const UserCard = () => {
                           >
                             More
                           </button>
-                          <button onClick={()=>messageList(user)} className="btn btn-secondary flex-1">Chat <MessageCircleMore size={20} /></button>
+                          <button onClick={async()=>{await messageList(user); navigate("/message")}} className="btn btn-secondary flex-1">Chat <MessageCircleMore size={20} /></button>
                         </div>
                       </div>
                     </div>

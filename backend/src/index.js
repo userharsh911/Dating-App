@@ -7,9 +7,10 @@ import cookieParser from "cookie-parser"
 import mainRouter from '../routes/mainRouter.routes.js';
 import messageRouter from '../routes/message.routes.js';
 // import mainRouter from '../routes/mainRouter.routes.js';
+import { server, app } from '../socket/socketio.js';
 dotenv.config();
 
-const app = express();
+// const app = express();
 app.use(cookieParser());
 const corsOptions = {
     origin:'http://localhost:5173',
@@ -29,9 +30,19 @@ app.use("/api/main",mainRouter)
 app.use("/api/message",messageRouter)
 
 
+if(process.env.NODE_ENV==="production"){
+    app.use(express.static(path.join(__dirname,"../frontend/dist")))
+
+    app.get("*",(req,res)=>{
+        res.sendFile(path.join(__dirname,"../frontend","dist","index.html"))
+    })
+}
+
 mongoose.connect(process.env.MONGO_URI).then(()=>{
-    app.listen(PORT,()=>{
+    server.listen(PORT,()=>{
         console.log(`The server is running on port ${PORT}`)
     })
+    server.keepAliveTimeout = 120 * 1000;
+    server.headersTimeout = 120 * 1000;
 })
 

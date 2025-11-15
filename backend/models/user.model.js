@@ -55,9 +55,9 @@ const UserSchema = mongoose.Schema({
     blockList:[{
         type:String,
     }],
-    approveList:[{
-        type:String,
-    }],
+    approvePerson:{
+        type:mongoose.Schema.Types.ObjectId,
+    },
     description:{
         type:String
     },

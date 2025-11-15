@@ -4,7 +4,7 @@ import { PanelRightOpen, PanelRightClose, Home, Heart, Compass, MessageSquare , 
 import userStore from '../store/userStore';
 
 const Header = () => {
-    const {user, LogoutAccount} = userStore(state=>state);
+    const {user, LogoutAccount, setSelectedUser} = userStore(state=>state);
     const navigate = useNavigate();
     const [isShow, setisShow] = useState(true)
     
@@ -65,7 +65,7 @@ const Header = () => {
                                     key={vals.path}
                                     id={vals.name} 
                                     className={`flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-primary hover:text-primary-content transition-all duration-200 group ${!isShow && 'justify-center'}`}
-                                    onClick={()=>navigate(`${vals.path}`)}
+                                    onClick={()=>{setSelectedUser(null);  navigate(`${vals.path}`)}}
                                 >
                                     <Icon size={20} className='group-hover:scale-110 transition-transform' />
                                     {isShow && <span className='font-medium'>{vals.name}</span>}
@@ -102,7 +102,7 @@ const Header = () => {
                                 key={vals.path}
                                 id={vals.name} 
                                 className='flex flex-col items-center gap-1 px-3 py-2 rounded-lg hover:bg-primary hover:text-primary-content transition-all duration-200 group'
-                                onClick={()=>navigate(`${vals.path}`)}
+                                onClick={()=>{setSelectedUser(null); navigate(`${vals.path}`)}}
                             >
                                 <Icon size={22} className='group-hover:scale-110 transition-transform' />
                                 <span className='text-xs font-medium'>{vals.name}</span>

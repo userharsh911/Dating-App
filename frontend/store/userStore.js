@@ -1,9 +1,14 @@
 import { create } from 'zustand'
 import axiosInstance from '../api/axiosApi';
+import messageStore from './message.store';
+import {io} from 'socket.io-client';
+const BASE_URI = "http://localhost:5005"
+
 const userStore = create((set, get) => ({
   user:null,
   allUsers:[],
   selectedUser:null,
+  onlineUsers:[],
   currentCardIndex: 0,
   page: 0,
   setCurrentCardIndex: (value)=>set({currentCardIndex:value}),
@@ -14,7 +19,8 @@ const userStore = create((set, get) => ({
   getUser: async()=>{
     try {
       const response = await axiosInstance.get('/auth/checkauth')
-      set({user:response.data.user})
+      set({user:response.data.user});
+      get().makeConnection();
       console.log("user get successfully ",response.data)
       return response?.data?.user
     } catch (error) {
@@ -100,7 +106,44 @@ const userStore = create((set, get) => ({
     } catch (error) {
       throw error.response?.data?.message;
     }
+  },
+
+  makeConnection: ()=>{
+    const {user} = get();
+    if(!user || get().socket?.connected) return;
+    
+    const socket = io(BASE_URI,{
+      query:{
+        userid:user._id
+      }
+    })
+    socket.connect();
+    set({socket:socket});
+    socket.on("connect", () => {
+      console.log("Connected:", socket.id);
+    });
+    // console.log("socket ",socket)
+
+    socket.on("sendmessage",(msg)=>{
+      const {updateMsg, selectedMessageUser} = messageStore.getState();
+      if(updateMsg.senderId!=selectedMessageUser._id){
+        return;
+      }
+      console.log("message aya ",msg);
+      updateMsg(msg)
+    });
+
+    socket.on("onlineUsers",(args)=>{
+      set({onlineUsers:args})
+      console.log("arguments",args)
+      console.log("Online users ",args);
+      console.log("FIT ONLINE USERS ", get().onlineUsers)
+    })
+
   }
+
+
+
 }))
 
 export default userStore;

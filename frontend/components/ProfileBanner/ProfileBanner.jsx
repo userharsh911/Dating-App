@@ -1,6 +1,11 @@
-import React from 'react';
+import React, { useEffect } from 'react';
+import userStore from '../../store/userStore';
 
 export default function ProfileBanner({image}) {
+  const {selectedUser, user} = userStore(state=>state);
+  useEffect(()=>{
+    console.log("sleeefe fefes fdf ",selectedUser)
+  },[selectedUser])
   return (
     <div className="w-full">
       {/* Banner Image */}
@@ -15,10 +20,13 @@ export default function ProfileBanner({image}) {
       {/* Profile Image */}
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="relative -mt-16">
-          <div className="avatar">
-            <div className="w-32 h-32 rounded-full ring ring-base-100 ring-offset-base-200 ring-offset-2">
+          <div className="avatar avatar-placeholder">
+            {image ? <div className="w-32 h-32 rounded-full ring ring-base-100 ring-offset-base-200 ring-offset-2">
               <img src={image} alt="Profile" />
-            </div>
+            </div> :
+            <div className="bg-neutral text-neutral-content w-32 h-32 rounded-full">
+              <span className="text-3xl">{selectedUser ? selectedUser.name[0].toUpperCase() : user.name[0].toUpperCase()}</span>
+            </div>}
           </div>
         </div>
       </div>

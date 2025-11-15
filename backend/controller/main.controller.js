@@ -111,3 +111,13 @@ export const editDescription = async(req,res)=>{
         throw error.errorResponse;
     }
 }
+
+// export const approvedPerson = async(req,res)=>{
+//     const user = req.user;
+//     const setUserid = req.query.userid;
+//     try {
+//         userSchema.findById()
+//     } catch (error) {
+//         console.log("error while approve ",error);
+//     }
+// }

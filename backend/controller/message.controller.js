@@ -1,12 +1,13 @@
 import MessageSchema from "../models/message.model.js";
 import userSchema from "../models/user.model.js";
-
+import { io, getSocketId } from "../socket/socketio.js";
 export const addToMessageList = async(req,res)=>{
     const user = req.user;
     const otherUser = req.query.otherUser;
     try {
         const messageToUser = await userSchema.findById(otherUser);
         if(messageToUser.messageList.includes(user._id) || user.messageList.includes(messageToUser._id)){
+            console.log("already in message lsit ")
             return res.status(200).json({message:'already in Message List'});
         }
         messageToUser.messageList.push(user._id)
@@ -55,7 +56,10 @@ export const createMessage = async(req,res)=>{
         }
         
         console.log("new message created successfully ",messageCreated);
-        
+        const receiverSocketId = getSocketId(receiverId);
+        console.log("chl rh h h  hj")
+        io.to(receiverSocketId).emit("sendmessage",messageCreated);
+
         return res.status(201).json({message:"successfully message sent",msg:messageCreated});
 
     } catch (error) {

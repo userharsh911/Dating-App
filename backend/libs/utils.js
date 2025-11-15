@@ -6,7 +6,7 @@ const createJSONwebToken = (userid,res)=>{
     res.cookie("useridToken",token,{
         maxAge: 172800000,
         httpOnly:"secure",
-        secure : process.env.SECURE != "DEVELOPMENT",
+        secure : process.env.NODE_ENV != "development",
         sameSite: "strict"
     });
 }

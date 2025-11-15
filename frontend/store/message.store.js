@@ -6,10 +6,19 @@ const messageStore = create((set,get)=>({
     allMessageUsers:[],
     selectedMessageUser: null,
     setSelectetMessageUser:value=>set({selectedMessageUser:value}),
+    updateMsg:value=>{
+        set({messages:[...get().messages,value]})
+        console.log("messages mesaages ",get().messages)
+    },
     messageList: async(user)=>{
         try {
             const response = await axiosInstance.put(`/message/addtomessagelist?otherUser=${user._id}`)
+            console.log("reponse dekhna ",response.data)
+            if(!response.data?.updatedUser){
+                return response.data?.message;
+            }
             userStore.getState().setUser(response.data.updatedUser);
+            return response.data;
         } catch (error) {
             throw error.response?.data?.message;
         }
@@ -27,6 +36,9 @@ const messageStore = create((set,get)=>({
     sendMessage: async(data)=>{
         try {
             const response = await axiosInstance.post(`message/sendmessage?userid=${get().selectedMessageUser._id}`,data)
+            
+            set({messages:[...get().messages,response.data.msg]})
+            return;
         } catch (error) {
             console.log("error while sending message ",error);
         }
