@@ -2,7 +2,7 @@ import { create } from 'zustand'
 import axiosInstance from '../api/axiosApi';
 import messageStore from './message.store';
 import {io} from 'socket.io-client';
-const BASE_URI = "http://localhost:5005"
+const BASE_URI = import.meta.env.MODE === "development" ? "http://localhost:5005" : "/"
 
 const userStore = create((set, get) => ({
   user:null,
