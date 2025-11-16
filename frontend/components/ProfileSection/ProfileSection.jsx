@@ -1,24 +1,13 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, {useRef, useState } from "react";
 import {
-  Heart,
   MapPin,
-  Briefcase,
   GraduationCap,
-  Music,
-  Camera,
-  Book,
-  Coffee,
-  Dumbbell,
-  Plane,
   Edit,
   Brain,
   Settings,
   Pencil,
   Check,
   X,
-  Gift,
-  BicepsFlexed,
-  Star,
 } from "lucide-react";
 import userStore from "../../store/userStore";
 import base64ImageConvert from "../../constant/fileReader";
@@ -40,7 +29,6 @@ const ProfileSecion = ({ editing }) => {
     UpdateProfilePic,
     EditUserHobby,
     EditUserDescription,
-    currentCardIndex,
   } = userStore((state) => state);
   const profile = {
     name: editing ? user?.name : selectedUser?.name,
@@ -69,13 +57,9 @@ const ProfileSecion = ({ editing }) => {
       url: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=400",
     },
   ];
-  useEffect(() => {
-    console.log("user updated ", user,currentCardIndex);
-  }, [user]);
 
   const imageUpload = async (e) => {
     e.preventDefault();
-    console.log("file selected ", image);
     let baseImage = await base64ImageConvert(image);
     toast.promise(
       UpdateProfilePic(baseImage).then(() => {
@@ -106,19 +90,19 @@ const ProfileSecion = ({ editing }) => {
     if (user?.description == descriptionRef.current.value.trim()) {
       return setEditBio(false);
     }
-
     setBioLoader(true);
     try {
-      console.log("Description ", descriptionRef.current.value);
       await EditUserDescription({
         description: descriptionRef.current.value.trim(),
       });
       setBioLoader(false);
       setEditBio(false);
     } catch (error) {
+      throw error?.response
+    }
+    finally{
       setEditBio(false);
       setBioLoader(false);
-      console.log(error);
     }
   };
 

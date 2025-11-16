@@ -14,18 +14,13 @@ export default function UserMessage() {
   const viewRef = useRef(null);
 
   const [isChatOpen, setIsChatOpen] = useState(false);
-  
-  // const [msgs, setMessages] = useState(messages);
-  
-  const [newMessage, setNewMessage] = useState("");
 
-  const {register, watch, handleSubmit} = useForm();
+  const {register, watch, handleSubmit, setValue} = useForm();
   
 
   const handleUserSelect = (user) => {
     setSelectetMessageUser(user);
     setIsChatOpen(true);
-    console.log("selected message user",selectedMessageUser)
   };
 
   const handleCloseChat = () => {
@@ -38,8 +33,9 @@ export default function UserMessage() {
     if(data.message.trim() === ""){
       return toast.error("Message cannot be empty");
     }
-    await sendMessage({message:data.message})
-    console.log("message data ",data);
+    const msg = data.message;
+    setValue('message','')
+    await sendMessage({message:msg})
     setLoader(false);
   }
 
@@ -166,9 +162,8 @@ export default function UserMessage() {
                     className="input input-bordered flex-1 focus:outline-none focus:border-primary"
                     {...register("message",{required:true})}
                   />
-                  {loader ? <span className="loading loading-spinner loading-md"></span> : <button 
-                    className="btn btn-circle btn-primary"
-                  >
+                  {loader ? <span className="loading loading-spinner loading-md"></span> : 
+                  <button className="btn btn-circle btn-primary">
                     <Send size={20} />
                   </button>}
                 </div>

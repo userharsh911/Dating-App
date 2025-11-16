@@ -13,15 +13,10 @@ const Header = () => {
         {name: 'Matches', path: '/matches', icon: Heart, isVerified: user ? true : false},
         {name: 'Messages', path: '/message', icon: MessageSquare , isVerified: user ? true : false},
         {name: 'Profile', path: '/profile', icon: User, isVerified: user ? true : false},
-        {name: 'Settings', path: '/settings', icon: Settings, isVerified: user ? true : false},
+        // {name: 'Settings', path: '/settings', icon: Settings, isVerified: user ? true : false},
         {name: 'Login', path: '/login', icon: LogIn, isVerified: !user ? true : false},
         {name: 'Signup', path: '/signup', icon: UserPlus, isVerified: !user ? true : false},
     ]
-
-    useEffect(()=>{
-        console.log("USER : ",user);
-    },[user])
-
     return (
         <>
         {/* Desktop Sidebar */}

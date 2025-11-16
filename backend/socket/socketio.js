@@ -25,6 +25,10 @@ io.on('connection',async(socket)=>{
 
         io.emit("onlineUsers",Object.keys(userMapped));
 
+        socket.on("disconnect",()=>{
+            delete userMapped[userid]
+            io.emit("onlineUsers",Object.keys(userMapped));
+        })
 
         console.log("user connected ",socket.id, socket.handshake.query.userid);
     } catch (error) {

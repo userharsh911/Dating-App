@@ -8,12 +8,10 @@ const messageStore = create((set,get)=>({
     setSelectetMessageUser:value=>set({selectedMessageUser:value}),
     updateMsg:value=>{
         set({messages:[...get().messages,value]})
-        console.log("messages mesaages ",get().messages)
     },
     messageList: async(user)=>{
         try {
             const response = await axiosInstance.put(`/message/addtomessagelist?otherUser=${user._id}`)
-            console.log("reponse dekhna ",response.data)
             if(!response.data?.updatedUser){
                 return response.data?.message;
             }
@@ -27,9 +25,8 @@ const messageStore = create((set,get)=>({
         try {
             const response = await axiosInstance.get('/message/getmessageusers');
             set({allMessageUsers:response.data.users})
-            console.log("all users message ",response?.data?.users)
         } catch (error) {
-            console.log(error);
+            throw error.response?.data?.message;
         }
     },
 
@@ -40,17 +37,16 @@ const messageStore = create((set,get)=>({
             set({messages:[...get().messages,response.data.msg]})
             return;
         } catch (error) {
-            console.log("error while sending message ",error);
+            throw error.response?.data?.message;
         }
     },
 
     getMessages: async()=>{
         try {
             const response = await axiosInstance.get(`message/getAllMessages?userid=${get().selectedMessageUser._id}`)
-            console.log("gettng resposne ",response)
             set({messages:response.data.messages})
         } catch (error) {
-            console.log(error.response?.data?.message);
+            throw error.response?.data?.message;
         }
     }
 }))

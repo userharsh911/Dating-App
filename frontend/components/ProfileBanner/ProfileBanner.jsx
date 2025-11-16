@@ -4,7 +4,6 @@ import userStore from '../../store/userStore';
 export default function ProfileBanner({image}) {
   const {selectedUser, user} = userStore(state=>state);
   useEffect(()=>{
-    console.log("sleeefe fefes fdf ",selectedUser)
   },[selectedUser])
   return (
     <div className="w-full">

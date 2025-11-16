@@ -20,11 +20,7 @@ const Login = () => {
                 return toast.error("Invalid email or password");
             }
             toast.promise(
-                LoginAccount({email, password}).then((user)=>{
-                    setLoader(false);
-                    navigate('/');
-                    console.log("user details ",user)
-                }),
+                LoginAccount({email, password}).then(()=> navigate('/')),
                 {
                     loading: 'Logging... ⏳',
                     success: `welcome 😀`,
@@ -32,10 +28,10 @@ const Login = () => {
                 }
             )
         } catch (error) {
-            setLoader(false);
-            console.log("error while logging in ",error)
             toast.error(error);
-            
+        }
+        finally{
+            setLoader(false);
         }
     }
 return (

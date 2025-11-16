@@ -21,10 +21,8 @@ const userStore = create((set, get) => ({
       const response = await axiosInstance.get('/auth/checkauth')
       set({user:response.data.user});
       get().makeConnection();
-      console.log("user get successfully ",response.data)
       return response?.data?.user
     } catch (error) {
-      console.log("useuse ",error)
       throw error.response?.data?.message
     }
   },  
@@ -33,7 +31,6 @@ const userStore = create((set, get) => ({
       const userData = await axiosInstance.post("/auth/signup",args);
       return userData
     } catch (error) {
-      console.log("error while signing up ",error.response?.data?.message)
       throw error.response?.data?.message;
     }
   },
@@ -41,18 +38,17 @@ const userStore = create((set, get) => ({
     try {
       const response = await axiosInstance.post('/auth/login',args);
       set({user:response.data.newUser});
-      console.log("After logged in data ", response)
+      get().makeConnection();
       return response.data.newUser;
     } catch (error) {
-      console.log("error while Logging in ",error.response?.data?.message)
       throw error.response?.data?.message;
     }
   },
 
   LogoutAccount : async()=>{
     try {
-      const response = await axiosInstance.post('/auth/logout');
-      console.log("Log out inst ", response.data);
+      await axiosInstance.post('/auth/logout');
+      get().disconnectSocket();
       set({user:null});
     } catch (error) {
       throw error.response?.data?.message;
@@ -60,9 +56,7 @@ const userStore = create((set, get) => ({
   },
   getMatchesUsers : async()=>{
     try {
-      console.log("Pages ",get().page)
       const response = await axiosInstance.get(`/main/getallusers/?page=${get().page}&limit=5`)
-      console.log("all users ",response.data.users);
       set({allUsers:response.data.users});
       return response.data;
     } catch (error) {
@@ -84,7 +78,6 @@ const userStore = create((set, get) => ({
       const response = await axiosInstance.put('/main/editprofile',data);
       set({user:response.data.updatedUser})
     } catch (error) {
-      console.log("error while updating user profile");
       throw error.response?.data?.message;
 
     }
@@ -119,28 +112,25 @@ const userStore = create((set, get) => ({
     })
     socket.connect();
     set({socket:socket});
-    socket.on("connect", () => {
-      console.log("Connected:", socket.id);
-    });
-    // console.log("socket ",socket)
 
     socket.on("sendmessage",(msg)=>{
       const {updateMsg, selectedMessageUser} = messageStore.getState();
-      if(updateMsg.senderId!=selectedMessageUser._id){
+      if(msg.senderId!=selectedMessageUser._id){
         return;
       }
-      console.log("message aya ",msg);
       updateMsg(msg)
     });
 
     socket.on("onlineUsers",(args)=>{
       set({onlineUsers:args})
-      console.log("arguments",args)
-      console.log("Online users ",args);
-      console.log("FIT ONLINE USERS ", get().onlineUsers)
     })
 
-  }
+  },
+  disconnectSocket:()=>{
+        if(get().socket?.connected){
+          get().socket.disconnect();
+        }
+    }
 
 
 

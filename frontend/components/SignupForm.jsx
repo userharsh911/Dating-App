@@ -21,7 +21,6 @@ const SignupForm = () => {
     const [selectedGender, setSelectedGender] = useState(null); 
       
     const onSubmit = async(data)=>{
-        console.log("form data ",data,selectedGender);
         const {name, branch, height, location, age, email, password} = data;
         setLoader(true)
         try {
@@ -37,7 +36,6 @@ const SignupForm = () => {
             if(age <17 || age >= 80){
                 return toast.error("invalid age provided");
             }
-            console.log("signup data",{name, email, password, age, selectedGender});
             if(!user){
                 toast.promise(
                     SignUpAccount({name, email, password, age, gender:selectedGender}).then(()=>{
@@ -67,10 +65,11 @@ const SignupForm = () => {
                 )
             }
             document.getElementById("my_modal_7").click();
-            setLoader(false)
         } catch (error) {
+            throw error?.response
+        }
+        finally{
             setLoader(false)
-            console.log("error while submitting signup form ",error)
         }
     }
     const formValues = watch();

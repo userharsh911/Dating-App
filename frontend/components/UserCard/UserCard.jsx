@@ -17,9 +17,8 @@ const UserCard = () => {
   const carouselRef = useRef(null);
   const scrollPositionKey = 'usercard-scroll-position';
   const lastUserRef = useRef();
-  const observerRef = useRef(null); // Observer ko store karne ke liye
+  const observerRef = useRef(null); 
 
-  // Load users jab page change ho
   useEffect(() => {
     const loadUsers = async () => {
       if (loading) return;
@@ -27,11 +26,10 @@ const UserCard = () => {
       setLoading(true);
       try {
         const data = await getMatchesUsers();
-        console.log("users in user card ", data.users);
         setHasMore(data.pagination.hasMore);
         setInitialLoad(false);
       } catch (error) {
-        console.error("Error loading users:", error);
+        throw error?.response
       } finally {
         setLoading(false);
       }
@@ -40,54 +38,46 @@ const UserCard = () => {
     loadUsers();
   }, [page]);
 
-  // Intersection Observer for infinite scroll
+
   useEffect(() => {
-    // Agar loading chal raha hai ya hasMore nahi hai, observer mat banao
     if (loading || !hasMore) {
       return;
     }
 
-    // Purana observer disconnect karo
     if (observerRef.current) {
       observerRef.current.disconnect();
     }
 
     observerRef.current = new IntersectionObserver(
       (entries) => {
-        // Ye check bahut important hai!
         if (entries[0].isIntersecting && hasMore && !loading) {
-          console.log("Loading more users... Current page:", page);
-          setPage(page + 1); // Next page load karo   
+          setPage(page + 1);
         }
       },
       { 
-        threshold: 0.8, // 80% visible ho tab trigger kare
-        rootMargin: '0px' // Extra margin mat do
+        threshold: 0.8,
+        rootMargin: '0px' 
       }
     );
 
     const currentRef = lastUserRef.current;
     if (currentRef) {
-      console.log("Observing last user card");
       observerRef.current.observe(currentRef);
     }
 
-    // Cleanup
     return () => {
       if (observerRef.current) {
         observerRef.current.disconnect();
       }
     };
-  }, [allUsers, hasMore, loading]); // allUsers change hone pe re-observe karo
+  }, [allUsers, hasMore, loading]); 
 
-  // Restore scroll position
+  
   useEffect(() => {
     setTimeout(() => {
-    console.log("Restoring scroll position...");
     const savedScrollIndex = sessionStorage.getItem(scrollPositionKey);
     
     if (savedScrollIndex && carouselRef.current && allUsers?.length > 0) {
-      console.log("Saved scroll index found:", savedScrollIndex);
       const index = parseInt(savedScrollIndex);
       const targetItem = carouselRef.current.querySelector(`.carousel-item:nth-child(${index + 1})`);
       if (targetItem) {

@@ -9,7 +9,6 @@ function App() {
   const {getUser} = userStore((state)=>state);
   useEffect(()=>{
     getUser();
-    console.log("workingg...")
   },[getUser])
 
   return (
