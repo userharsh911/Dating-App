@@ -204,16 +204,16 @@ export default function Home() {
       </div>
 
       {/* Footer */}
-      <footer className="footer footer-center p-10 bg-base-100 text-base-content">
+      <footer className="footer footer-center p-10 pb-40 bg-base-100 text-base-content">
         <div>
-          <div className="flex items-center gap-2">
+          <div className="flex md:flex-col items-center gap-2">
             <Heart className="text-error" fill="currentColor" size={32} />
             <span className="font-bold text-2xl">MateConnect</span>
           </div>
           <p className="font-medium">Connecting hearts since 2020</p>
         </div>
-        <div>
-          <div className="grid grid-flow-col gap-4">
+        <div className=''>
+          <div className="grid md:grid-flow-col gap-4">
             <a className="link link-hover">About</a>
             <a className="link link-hover">Privacy</a>
             <a className="link link-hover">Terms</a>

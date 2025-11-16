@@ -109,7 +109,7 @@ const ProfileSecion = ({ editing }) => {
   return (
     <>
       {user && (
-        <div className="h-dvh overflow-y-scroll bg-base-200 text-base-content">
+        <div className="h-dvh pb-24 overflow-y-scroll bg-base-200 text-base-content">
           {/* Header */}
           <div className="sticky top-0 z-50 bg-base-200">
             <div className="max-w-4xl mx-auto px-2 sm:px-4 py-4 flex justify-end items-center">
@@ -353,7 +353,7 @@ const ProfileSecion = ({ editing }) => {
                     </div>
                     <div className="p-3 sm:p-4 rounded-xl bg-base-200">
                       <p className="text-xs sm:text-sm mb-1 text-base-content/70">
-                        Distance
+                        Location
                       </p>
                       <p className="font-medium text-sm sm:text-base text-base-content">
                         {profile.location}
