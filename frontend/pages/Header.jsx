@@ -56,15 +56,16 @@ const Header = () => {
                             const Icon = vals.icon;
                             return(
                                 vals.isVerified &&
-                                <button 
+                                <NavLink 
                                     key={vals.path}
-                                    id={vals.name} 
-                                    className={`flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-primary hover:text-primary-content transition-all duration-200 group ${!isShow && 'justify-center'}`}
-                                    onClick={()=>{setSelectedUser(null);  navigate(`${vals.path}`)}}
+                                    id={vals.name}
+                                    to={vals.path}
+                                    className={({isActive})=> isActive ? 'border-b-4 px-4 rounded-2xl py-2 flex items-center gap-3' :  ` flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-primary hover:text-primary-content transition-all duration-200 group ${!isShow && 'justify-center'}`}
+                                    onClick={()=>setSelectedUser(null)}
                                 >
                                     <Icon size={20} className='group-hover:scale-110 transition-transform' />
                                     {isShow && <span className='font-medium'>{vals.name}</span>}
-                                </button>
+                                </NavLink>
                             )
                         })
                     }
@@ -93,15 +94,16 @@ const Header = () => {
                         const Icon = vals.icon;
                         return(
                             vals.isVerified &&
-                            <button 
+                            <NavLink 
                                 key={vals.path}
-                                id={vals.name} 
-                                className='flex flex-col items-center gap-1 px-3 py-2 rounded-lg hover:bg-primary hover:text-primary-content transition-all duration-200 group'
-                                onClick={()=>{setSelectedUser(null); navigate(`${vals.path}`)}}
+                                id={vals.name}
+                                to={vals.path}
+                                className={({isActive})=> isActive ? ' px-3 py-2 flex bg-primary text-primary-content rounded-lg flex-col items-center gap-3' :'flex flex-col items-center gap-1 px-3 py-2 rounded-lg hover:bg-primary hover:text-primary-content transition-all duration-200 group'}
+                                onClick={()=>setSelectedUser(null)}
                             >
                                 <Icon size={22} className='group-hover:scale-110 transition-transform' />
                                 <span className='text-xs font-medium'>{vals.name}</span>
-                            </button>
+                            </NavLink>
                         )
                     })
                 }

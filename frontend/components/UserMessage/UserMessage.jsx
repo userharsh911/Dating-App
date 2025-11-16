@@ -68,7 +68,7 @@ export default function UserMessage() {
             start connecting with users from the Matches section
           </span>
         </div> :
-        <div className="overflow-y-auto flex-1">
+        <div className="overflow-y-auto flex-1 py-5 ">
           <ul className="menu menu-lg p-0">
             {allMessageUsers?.map((user) => (
               <li key={user._id} onClick={() =>  handleUserSelect(user)}>
