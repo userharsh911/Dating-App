@@ -5,6 +5,7 @@ const messageStore = create((set,get)=>({
     messages:[],
     allMessageUsers:[],
     selectedMessageUser: null,
+    setMessageNull: ()=>set({messages:null}),
     setSelectetMessageUser:value=>set({selectedMessageUser:value}),
     updateMsg:value=>{
         set({messages:[...get().messages,value]})

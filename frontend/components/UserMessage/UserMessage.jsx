@@ -8,17 +8,18 @@ import userStore from '../../store/userStore';
 import formatRelativeTime from '../../constant/DateTime';
 
 export default function UserMessage() {
-  const { allMessageUsers, setSelectetMessageUser, selectedMessageUser, sendMessage, messages, getMessages} = messageStore(state => state);
+  const { allMessageUsers, setSelectetMessageUser, setMessageNull, selectedMessageUser, sendMessage, messages, getMessages} = messageStore(state => state);
   const {user, onlineUsers} = userStore(state=>state);
   const [loader,setLoader] = useState(false)
   const viewRef = useRef(null);
 
   const [isChatOpen, setIsChatOpen] = useState(false);
 
-  const {register, watch, handleSubmit, setValue} = useForm();
+  const {register, handleSubmit, setValue} = useForm();
   
 
   const handleUserSelect = (user) => {
+    setMessageNull()
     setSelectetMessageUser(user);
     setIsChatOpen(true);
   };
@@ -70,11 +71,11 @@ export default function UserMessage() {
         <div className="overflow-y-auto flex-1">
           <ul className="menu menu-lg p-0">
             {allMessageUsers?.map((user) => (
-              <li key={user._id} onClick={() => handleUserSelect(user)}>
+              <li key={user._id} onClick={() =>  handleUserSelect(user)}>
                 <a className="flex items-center gap-3 py-3 px-4 hover:bg-base-200">
                   <div className={`avatar avatar-placeholder ${onlineUsers.includes(user._id) ? 'avatar-online' : 'avatar-offline'}`}>
                     {user?.profilePicLink ?  <div className="w-12 rounded-full">
-                      <img src={user.profilePicLink || userImage} alt={user.name} />
+                      <img src={user.profilePicLink} alt={user.name} />
                     </div> :
                     <div className="bg-neutral text-neutral-content w-12 rounded-full">
                       <span className="text-3xl">{user.name[0].toUpperCase()}</span>
@@ -82,7 +83,6 @@ export default function UserMessage() {
                   </div>
                   <div className="flex-1 min-w-0">
                     <div className="font-semibold text-base text-base-content">{user.name}</div>
-                    {/* <div className="text-sm text-base-content opacity-60 truncate">{user.lastMessage}</div> */}
                   </div>
                 </a>
               </li>
@@ -99,14 +99,17 @@ export default function UserMessage() {
             <div className="bg-primary text-primary-content p-4 shadow-lg">
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-3">
-                  <div className={`avatar ${selectedMessageUser.online ? 'online' : 'offline'}`}>
-                    <div className="w-10 rounded-full">
-                      <img src={selectedMessageUser.profileLink} alt={selectedMessageUser.name} />
-                    </div>
+                  <div className={`avatar avatar-placeholder ${onlineUsers.includes(selectedMessageUser._id) ? 'avatar-online' : 'avatar-offline'}`}>
+                    {selectedMessageUser?.profilePicLink ?  <div className="w-12 rounded-full">
+                      <img src={selectedMessageUser.profilePicLink} alt={user.name} />
+                    </div> :
+                    <div className="bg-neutral text-neutral-content w-12 rounded-full">
+                      <span className="text-3xl">{selectedMessageUser.name[0].toUpperCase()}</span>
+                    </div>}
                   </div>
                   <div>
                     <h2 className="font-semibold">{selectedMessageUser.name}</h2>
-                    <p className="text-xs opacity-70">{selectedMessageUser.online ? 'Online' : 'Offline'}</p>
+                    <p className="text-xs opacity-70">{onlineUsers.includes(selectedMessageUser._id) ? 'Online' : 'Offline'}</p>
                   </div>
                 </div>
                 {/* Close Button for Mobile */}
@@ -121,7 +124,7 @@ export default function UserMessage() {
 
             {/* Chat Messages */}
             <div className="flex-1 overflow-y-auto p-4 space-y-4 bg-base-200">
-              {messages.map((msg) => (
+              {messages?.map((msg) => (
                 <>
                   <div key={msg.id} className={`chat ${msg.senderId === user._id ? 'chat-end' : 'chat-start'}`}>
                   <div className="chat-image avatar">
