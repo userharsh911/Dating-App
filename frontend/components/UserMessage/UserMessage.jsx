@@ -7,12 +7,14 @@ import userImage from "../../public/user.png"
 import userStore from '../../store/userStore';
 import formatRelativeTime from '../../constant/DateTime';
 import UsersSkeleton from '../UsersSkeleton/UsersSkeleton';
+import { useNavigate } from 'react-router-dom';
 
 export default function UserMessage() {
   const { allMessageUsers, setSelectetMessageUser, setMessageNull, selectedMessageUser, sendMessage, messages, getMessages} = messageStore(state => state);
-  const {user, onlineUsers} = userStore(state=>state);
+  const {user, onlineUsers, setSelectedUser} = userStore(state=>state);
   const [loader,setLoader] = useState(false)
   const viewRef = useRef(null);
+  const navigate = useNavigate();
 
   const [isChatOpen, setIsChatOpen] = useState(false);
 
@@ -72,8 +74,8 @@ export default function UserMessage() {
         <div className="overflow-y-auto px-4 flex-1 py-5 ">
           <ul className="menu menu-lg w-full p-0">
             {allMessageUsers?.map((user) => (
-              <li key={user._id} onClick={() =>  handleUserSelect(user)}>
-                <a className="flex items-center gap-3 py-3 px-4 hover:bg-base-200">
+              <li key={user._id}   onClick={() => handleUserSelect(user)}>
+                <div className={`flex items-center gap-3 py-2 my-1 px-4 hover:bg-base-200 ${selectedMessageUser?._id==user._id && 'bg-base-200'} `}>
                   <div className={`avatar avatar-placeholder ${onlineUsers.includes(user._id) ? 'avatar-online' : 'avatar-offline'}`}>
                     {user?.profilePicLink ?  <div className="w-12 rounded-full">
                       <img src={user.profilePicLink} alt={user.name} />
@@ -85,7 +87,7 @@ export default function UserMessage() {
                   <div className="flex-1 min-w-0">
                     <div className="font-semibold text-base text-base-content">{user.name}</div>
                   </div>
-                </a>
+                </div>
               </li>
             ))}
             {
@@ -102,7 +104,10 @@ export default function UserMessage() {
             {/* Chat Header */}
             <div className="bg-primary text-primary-content p-4 shadow-lg">
               <div className="flex items-center justify-between">
-                <div className="flex items-center gap-3">
+                <div className="flex items-center gap-3 cursor-pointer" onClick={()=>{
+                  setSelectedUser(selectedMessageUser);
+                  navigate(`/messages/moredetails`)
+                }}>
                   <div className={`avatar avatar-placeholder ${onlineUsers.includes(selectedMessageUser._id) ? 'avatar-online' : 'avatar-offline'}`}>
                     {selectedMessageUser?.profilePicLink ?  <div className="w-12 rounded-full">
                       <img src={selectedMessageUser.profilePicLink} alt={user.name} />
@@ -128,8 +133,8 @@ export default function UserMessage() {
 
             {/* Chat Messages */}
             <div className="flex-1 overflow-y-auto p-4 space-y-4 bg-base-200">
-              {messages?.map((msg) => (
-                <>
+              {messages?.map((msg,i) => (
+                <div key={i}>
                   <div key={msg.id} className={`chat ${msg.senderId === user._id ? 'chat-end' : 'chat-start'}`}>
                   <div className="chat-image avatar">
                     <div className="w-10 rounded-full">
@@ -155,12 +160,12 @@ export default function UserMessage() {
                 <div ref={viewRef}>
                   
                 </div>
-                </>
+                </div>
               ))}
               {
                 messages?.length<=0 && 
                 <div className='flex-1 flex-col gap-10 flex items-center justify-center text-base-content opacity-50 p-4'>
-                  <span>Start messaging to connect mate</span>
+                  <span>No messages yet.</span>
                 </div>
               }
 
