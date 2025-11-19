@@ -60,7 +60,7 @@ const Header = () => {
                                     key={vals.path}
                                     id={vals.name}
                                     to={vals.path}
-                                    className={({isActive})=> isActive ? 'border-b-4 px-4 rounded-2xl py-2 flex items-center gap-3' :  ` flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-primary hover:text-primary-content transition-all duration-200 group ${!isShow && 'justify-center'}`}
+                                    className={({isActive})=> isActive ? 'border-b-4 border-primary px-4 rounded-lg py-3 flex items-center gap-3' :  ` flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-primary hover:text-primary-content transition-all duration-200 group ${!isShow && 'justify-center'}`}
                                     onClick={()=>setSelectedUser(null)}
                                 >
                                     <Icon size={20} className='group-hover:scale-110 transition-transform' />

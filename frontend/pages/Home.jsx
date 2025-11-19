@@ -212,15 +212,6 @@ export default function Home() {
           </div>
           <p className="font-medium">Connecting hearts since 2020</p>
         </div>
-        <div className=''>
-          <div className="grid md:grid-flow-col gap-4">
-            <a className="link link-hover">About</a>
-            <a className="link link-hover">Privacy</a>
-            <a className="link link-hover">Terms</a>
-            <a className="link link-hover">Safety</a>
-            <a className="link link-hover">Contact</a>
-          </div>
-        </div>
         <div>
           <p>Copyright © 2024 - Made with ❤️ by MateConnect</p>
         </div>

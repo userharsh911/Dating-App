@@ -27,14 +27,17 @@ const SignupForm = () => {
             if(!/^[A-Za-z]{3,}(?: [A-Za-z]+)*$/.test(name)){
                 return toast.error("Invalid name");
             }
-            if(!user && !/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[A-Za-z]{2,}$/.test(email)){
+            else if(!user && !/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[A-Za-z]{2,}$/.test(email)){
                 return toast.error("Invalid email");
             }
-            if(!user && !/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/.test(password)){
+            else if(!user && !/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/.test(password)){
                 return toast.error("try a stronger password");
             }
-            if(age <17 || age >= 80){
+            else if(age<14 || age > 30){
                 return toast.error("invalid age provided");
+            }
+            else if(selectedGender !="Male" || selectedGender !="Female" || selectedGender !="Spectrum"){
+                return toast.error("Select a valid gender")
             }
             if(!user){
                 toast.promise(
@@ -80,7 +83,7 @@ const SignupForm = () => {
 
 return (
     
-    <div className="hero-content flex-col gap-16 lg:flex-row-reverse">
+    <div className="hero-content h-screen py-30 md:py-0 overflow-y-scroll flex-col gap-16 lg:flex-row-reverse">
         <div className={` ${user && 'hidden' } text-center lg:text-left`}>
             <h1 className="text-5xl font-bold">Connecting Hearts!</h1>
             <p className="py-6">Join our community and find your perfect match today.</p>
@@ -197,7 +200,7 @@ return (
                     <div className="">
                         <p className='pb-6'>Select gender :</p>
                         <div className="filter">
-                            <input className="btn filter-reset" onClick={()=>setSelectedGender('')} type="radio" name="metaframeworks" aria-label="All"/>
+                            <input className="btn filter-reset" onClick={()=>setSelectedGender('')} type="radio" name="metaframeworks" aria-label="X"/>
                             <input className="btn" type="radio" checked={selectedGender=="Male"} onChange={()=>setSelectedGender("Male")} name="metaframeworks" aria-label="Male"/>
                             <input className="btn" type="radio" checked={selectedGender=="Female"} onChange={()=>setSelectedGender("Female")} name="metaframeworks" aria-label="Female"/>
                             <input className="btn" type="radio" checked={selectedGender=="Spectrum"} onChange={()=>setSelectedGender("Spectrum")} name="metaframeworks" aria-label="Spectrum"/>
