@@ -9,9 +9,9 @@ const Message = () => {
     getAllMessageUsers();
   },[]);
   return (
-    <>
+    <div className='w-full bg-red-400'>
       <UserMessage/>
-    </>
+    </div>
   )
 }
 

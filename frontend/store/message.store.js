@@ -2,8 +2,8 @@ import {create} from "zustand";
 import axiosInstance from "../api/axiosApi";
 import userStore from "./userStore";
 const messageStore = create((set,get)=>({
-    messages:[],
-    allMessageUsers:[],
+    messages:null,
+    allMessageUsers:null,
     selectedMessageUser: null,
     setMessageNull: ()=>set({messages:null}),
     setSelectetMessageUser:value=>set({selectedMessageUser:value}),

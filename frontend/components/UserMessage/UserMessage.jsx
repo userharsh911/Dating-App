@@ -6,6 +6,7 @@ import toast from 'react-hot-toast';
 import userImage from "../../public/user.png"
 import userStore from '../../store/userStore';
 import formatRelativeTime from '../../constant/DateTime';
+import UsersSkeleton from '../UsersSkeleton/UsersSkeleton';
 
 export default function UserMessage() {
   const { allMessageUsers, setSelectetMessageUser, setMessageNull, selectedMessageUser, sendMessage, messages, getMessages} = messageStore(state => state);
@@ -68,8 +69,8 @@ export default function UserMessage() {
             start connecting with users from the Matches section
           </span>
         </div> :
-        <div className="overflow-y-auto flex-1 py-5 ">
-          <ul className="menu menu-lg p-0">
+        <div className="overflow-y-auto px-4 flex-1 py-5 ">
+          <ul className="menu menu-lg w-full p-0">
             {allMessageUsers?.map((user) => (
               <li key={user._id} onClick={() =>  handleUserSelect(user)}>
                 <a className="flex items-center gap-3 py-3 px-4 hover:bg-base-200">
@@ -87,6 +88,9 @@ export default function UserMessage() {
                 </a>
               </li>
             ))}
+            {
+              !allMessageUsers && <UsersSkeleton/>
+            }
           </ul>
         </div>}
       </div>
@@ -153,6 +157,16 @@ export default function UserMessage() {
                 </div>
                 </>
               ))}
+              {
+                messages?.length<=0 && 
+                <div className='flex-1 flex-col gap-10 flex items-center justify-center text-base-content opacity-50 p-4'>
+                  <span>Start messaging to connect mate</span>
+                </div>
+              }
+
+              {
+                !messages && <UsersSkeleton message={true}/>
+              }
             </div>
 
             {/* Input Area */}
