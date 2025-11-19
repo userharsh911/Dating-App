@@ -58,7 +58,7 @@ export const createMessage = async(req,res)=>{
         console.log("new message created successfully ",messageCreated);
         const receiverSocketId = getSocketId(receiverId);
         console.log("chl rh h h  hj")
-        io.to(receiverSocketId).emit("sendmessage",messageCreated);
+        io.to(receiverSocketId).emit("sendmessage",{msg:messageCreated,user});
 
         return res.status(201).json({message:"successfully message sent",msg:messageCreated});
 

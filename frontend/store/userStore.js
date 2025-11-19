@@ -2,6 +2,7 @@ import { create } from 'zustand'
 import axiosInstance from '../api/axiosApi';
 import messageStore from './message.store';
 import {io} from 'socket.io-client';
+import {toast} from 'react-hot-toast';
 const BASE_URI = import.meta.env.MODE === "development" ? "http://localhost:5005" : "/"
 
 const userStore = create((set, get) => ({
@@ -101,6 +102,28 @@ const userStore = create((set, get) => ({
     }
   },
 
+  blockPerson : async(id)=>{
+    try {
+      console.log("bll=ocking")
+      const response = await axiosInstance.put(`/main/blockperson?user=${id}`);
+      set({user:response.data.updatedUser});
+      return response.data.updatedUser;
+    } catch (error) {
+      throw error.response?.data?.message;
+    }
+  },
+  unblockPerson : async(id)=>{
+    try {
+      console.log("unblocking...")
+      const response = await axiosInstance.put(`/main/unblockperson?user=${id}`);
+      set({user:response.data.updatedUser});
+      return response.data.updatedUser;
+    } catch (error) {
+      throw error.response?.data?.message;
+    }
+  },
+
+
   makeConnection: ()=>{
     const {user} = get();
     if(!user || get().socket?.connected) return;
@@ -113,16 +136,39 @@ const userStore = create((set, get) => ({
     socket.connect();
     set({socket:socket});
 
-    socket.on("sendmessage",(msg)=>{
+    socket.on("sendmessage",(args)=>{
       const {updateMsg, selectedMessageUser} = messageStore.getState();
-      if(msg.senderId!=selectedMessageUser._id){
-        return;
+      if(args.msg.senderId!=selectedMessageUser?._id || !selectedMessageUser){
+        return toast.success(`${args.user.name} sends you a message`)
       }
-      updateMsg(msg)
+      updateMsg(args.msg)
     });
 
     socket.on("onlineUsers",(args)=>{
       set({onlineUsers:args})
+    })
+
+    socket.on("blockYou",async(args)=>{
+      const {getAllMessageUsers, setSelectetMessageUser, selectedMessageUser} = messageStore.getState()
+      toast(`${args.blockBy.name} blocked you`, {
+        icon: '🚫',
+      });
+      if(selectedMessageUser._id == args.blockBy._id){
+        setSelectetMessageUser(args.blockBy);
+      }
+      await getAllMessageUsers();
+
+    })
+    socket.on("unblockYou",async(args)=>{
+      const {getAllMessageUsers, setSelectetMessageUser, selectedMessageUser} = messageStore.getState()
+      toast(`${args.unblockBy.name} unblocked you`, {
+        icon: '🔓',
+      });
+      if(selectedMessageUser._id == args.unblockBy._id){
+        setSelectetMessageUser(args.unblockBy);
+      }
+      await getAllMessageUsers();
+
     })
 
   },

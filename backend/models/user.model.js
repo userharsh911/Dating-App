@@ -53,7 +53,7 @@ const UserSchema = mongoose.Schema({
         required:true,
     },
     blockList:[{
-        type:String,
+        type:mongoose.Schema.Types.ObjectId,
     }],
     approvePerson:{
         type:mongoose.Schema.Types.ObjectId,

@@ -1,5 +1,6 @@
 import userSchema from "../models/user.model.js"
 import cloudinary from "../libs/cloudinary.js";
+import {io, getSocketId} from '../socket/socketio.js'
 export const getAllUsers = async(req,res)=>{
     const user = req.user; 
     const page = parseInt(req.query.page) || 1;
@@ -109,6 +110,45 @@ export const editDescription = async(req,res)=>{
     } catch (error) {
         console.log("error while updating description ",error);
         throw error.errorResponse;
+    }
+}
+
+export const blockedPerson = async(req,res)=>{
+    const blockUser = req.query.user;
+    const user = req.user;
+    try {
+        console.log("block user id ",blockUser);
+        if(user.blockList.includes(blockUser)){
+            return res.status(200).json({message:"user already in your blockList"});    
+        }
+        user.blockList.push(blockUser);
+        await user.save();
+        const updatedUser = user;
+        const blockUserSocketId = getSocketId(blockUser);
+        io.to(blockUserSocketId).emit("blockYou",{message:"you blocked ",blockBy:updatedUser});
+        return res.status(200).json({message:"succesfully user blocked",updatedUser})
+
+    } catch (error) {
+        console.log("error while blocking a person ",error);
+    }
+}
+export const unblockedPerson = async(req,res)=>{
+    const unblockUser = req.query.user;
+    const user = req.user;
+    try {
+        console.log("unblock user ",unblockUser)
+        if(!user.blockList.includes(unblockUser)){
+            return res.status(200).json({message:"user isn't in your blockList"});    
+        }
+        user.blockList.splice(user.blockList.indexOf(unblockUser),1);
+        await user.save();
+        const updatedUser = user;
+        const unblockUserSocketId = getSocketId(unblockUser);
+        io.to(unblockUserSocketId).emit("unblockYou",{message:"you blocked ",unblockBy:updatedUser});
+        return res.status(200).json({message:"succesfully user blocked",updatedUser})
+
+    } catch (error) {
+        console.log("error while blocking a person ",error);
     }
 }
 
