@@ -22,8 +22,10 @@ const SignupForm = () => {
       
     const onSubmit = async(data)=>{
         const {name, branch, height, location, age, email, password} = data;
+        console.log("form data ",selectedGender)
         setLoader(true)
         try {
+            console.log(selectedGender=="Male"," true h ya falses");
             if(!/^[A-Za-z]{3,}(?: [A-Za-z]+)*$/.test(name)){
                 return toast.error("Invalid name");
             }
@@ -36,38 +38,39 @@ const SignupForm = () => {
             else if(age<14 || age > 30){
                 return toast.error("invalid age provided");
             }
-            else if(selectedGender !="Male" || selectedGender !="Female" || selectedGender !="Spectrum"){
+            if(selectedGender != "Male" || selectedGender !="Female" || selectedGender !="Spectrum"){
+                if(!user){
+                    toast.promise(
+                        SignUpAccount({name, email, password, age, gender:selectedGender}).then(()=>{
+                            setLoader(false);
+                            LoginAccount({email, password}).then(()=>{
+                                navigate('/')
+                            })
+    
+                        }),
+                        {
+                            loading: 'signing... ⏳',
+                            success: 'account created 😀',
+                            error: 'Error while creating your account 🥲',
+                        }
+                    )
+                }
+                if(user){
+                    toast.promise(
+                        UpdateUserProfile({name, age, gender:selectedGender, location, branch, height}).then(()=>{
+                            setLoader(false)
+                        }),
+                        {
+                            loading: 'updating... ⏳',
+                            success: 'successfully updated 😀',
+                            error: 'Error while updating your account 🥲',
+                        }
+                    )
+                    document.getElementById("my_modal_7").click();
+                }
+            }else{
                 return toast.error("Select a valid gender")
             }
-            if(!user){
-                toast.promise(
-                    SignUpAccount({name, email, password, age, gender:selectedGender}).then(()=>{
-                        setLoader(false);
-                        LoginAccount({email, password}).then(()=>{
-                            navigate('/')
-                        })
-
-                    }),
-                    {
-                        loading: 'signing... ⏳',
-                        success: 'account created 😀',
-                        error: 'Error while creating your account 🥲',
-                    }
-                )
-            }
-            if(user){
-                toast.promise(
-                    UpdateUserProfile({name, age, gender:selectedGender, location, branch, height}).then(()=>{
-                        setLoader(false)
-                    }),
-                    {
-                        loading: 'updating... ⏳',
-                        success: 'successfully updated 😀',
-                        error: 'Error while updating your account 🥲',
-                    }
-                )
-            }
-            document.getElementById("my_modal_7").click();
         } catch (error) {
             throw error?.response
         }

@@ -30,11 +30,10 @@ export default function UserMessage() {
   const { register, handleSubmit, setValue } = useForm();
 
   const handleUserSelect = (user) => {
-    console.log("selected user ", user);
+    setIsChatOpen(true);
     if (selectedMessageUser?._id == user._id) return;
     setMessageNull();
     setSelectetMessageUser(user);
-    setIsChatOpen(true);
   };
 
   const handleCloseChat = () => {

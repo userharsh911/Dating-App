@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from 'react'
-import { Link, NavLink, useNavigate } from 'react-router-dom';
+import {useState } from 'react'
+import { NavLink, useNavigate } from 'react-router-dom';
 import { PanelRightOpen, PanelRightClose, Home, Heart, Compass, MessageSquare , User, Settings, LogIn, UserPlus, LogOut } from 'lucide-react';
 import userStore from '../store/userStore';
 
