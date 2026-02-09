@@ -4,6 +4,7 @@ import toast, { Toaster } from 'react-hot-toast';
 import { useForm, } from "react-hook-form"
 import userStore from '../store/userStore';
 import { useNavigate } from 'react-router-dom';
+import ConnectingHeartsCard from './SIdeComponent/ConnectingHeartsCard';
 const SignupForm = () => {
     const {SignUpAccount, user, UpdateUserProfile, LoginAccount} = userStore(state=>state);
     const {register, handleSubmit, watch} = useForm({
@@ -69,7 +70,7 @@ const SignupForm = () => {
                     document.getElementById("my_modal_7").click();
                 }
             }else{
-                return toast.error("Select a valid gender")
+                return toast.error("Select a valid gender");
             }
         } catch (error) {
             throw error?.response
@@ -88,8 +89,7 @@ return (
     
     <div className="hero-content h-screen py-30 md:py-0 overflow-y-scroll flex-col gap-16 lg:flex-row-reverse">
         <div className={` ${user && 'hidden' } text-center lg:text-left`}>
-            <h1 className="text-5xl font-bold">Connecting Hearts!</h1>
-            <p className="py-6">Join our community and find your perfect match today.</p>
+            <ConnectingHeartsCard/>
         </div>
         <div className="card shrink-0 w-full max-w-sm shadow-2xl bg-base-100">
             <form className="card-body flex flex-col gap-7" onSubmit={handleSubmit(onSubmit)}>
@@ -99,7 +99,7 @@ return (
                         onClick={()=>navigate('/login')} 
                         className='text-blue-400 cursor-pointer'
                     >
-                        sign in
+                        {' sign in'}
                     </span>
                 </p>}
                 <div className="form-control">
@@ -146,6 +146,7 @@ return (
                             {...register("age")}
                             type="range" placeholder="age" 
                             min={14}
+                            defaultValue={20}
                             max={30}
                             className="range range-xs range-neutral" 
                             required
