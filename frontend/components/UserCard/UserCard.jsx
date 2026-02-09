@@ -4,8 +4,6 @@ import messageStore from "../../store/message.store";
 import { MessageCircleMore, User, Heart, Sparkles, MapPin } from "lucide-react";
 import MatchCardSkeleton from "../MatchCardSkeleton/MatchCardSkeleton";
 import { useNavigate } from "react-router-dom";
-import { motion, AnimatePresence } from "framer-motion";
-
 const UserCard = () => {
   const { getMatchesUsers, allUsers, setSelectedUser, page, setPage, onlineUsers } = userStore((state) => state);
   const { messageList } = messageStore((state) => state);
