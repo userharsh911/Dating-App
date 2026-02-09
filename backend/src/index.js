@@ -9,6 +9,7 @@ import messageRouter from '../routes/message.routes.js';
 // import mainRouter from '../routes/mainRouter.routes.js';
 import { server, app } from '../socket/socketio.js';
 import path from "path"
+import job from '../libs/cron.js';
 
 
 dotenv.config();
@@ -27,6 +28,8 @@ app.use(express.json({ limit: "20mb" }));
 app.use(express.urlencoded({ limit: "20mb", extended: true }));
 
 const PORT = process.env.PORT || 5000;
+
+job.start();
 
 // app.use("/api",authRouter);
 app.use("/api/auth",authRouter);
