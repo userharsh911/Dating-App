@@ -115,7 +115,7 @@ const UserCard = () => {
               <MatchCardSkeleton />
             ) : allUsers?.length > 0 ? (
               <>
-                {allUsers.map((user, index) => {
+                {allUsers?.map((user, index) => {
                     const isOnline = onlineUsers.includes(user._id);
                     
                     return (
