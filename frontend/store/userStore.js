@@ -3,7 +3,7 @@ import axiosInstance from '../api/axiosApi';
 import messageStore from './message.store';
 import {io} from 'socket.io-client';
 import {toast} from 'react-hot-toast';
-const BASE_URI = import.meta.env.MODE === "development" ? "http://localhost:5005" : `${import.meta.VITE_BACKEND_URI}`
+const BASE_URI = import.meta.env.MODE === "development" ? "http://localhost:5005" : `${import.meta.env.VITE_BACKEND_URI}`
 
 const userStore = create((set, get) => ({
   user:null,
