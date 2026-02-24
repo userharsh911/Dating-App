@@ -7,7 +7,7 @@ const createJSONwebToken = (userid,res)=>{
         maxAge: 172800000,
         httpOnly:"secure",
         secure : process.env.NODE_ENV != "development",
-        sameSite: "strict"
+        sameSite: "none"
     });
 }
 

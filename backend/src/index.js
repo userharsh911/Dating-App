@@ -18,7 +18,7 @@ const __dirname = path.resolve();
 // const app = express();
 app.use(cookieParser());
 const corsOptions = {
-    origin:'http://localhost:5173',
+    origin:process.env.FRONTEND_URI,
     method:["get","post","put","delete"],
     credentials:true,
 }
@@ -29,7 +29,7 @@ app.use(express.urlencoded({ limit: "20mb", extended: true }));
 
 const PORT = process.env.PORT || 5000;
 
-job.start();
+// job.start();
 
 // app.use("/api",authRouter);
 app.use("/api/auth",authRouter);
@@ -37,19 +37,19 @@ app.use("/api/main",mainRouter)
 app.use("/api/message",messageRouter)
 
 
-if(process.env.NODE_ENV==="production"){
-    app.use(express.static(path.join(__dirname,"../frontend/dist")))
+// if(process.env.NODE_ENV==="production"){
+//     app.use(express.static(path.join(__dirname,"../frontend/dist")))
 
-    app.get('/*', (req, res) => {
-        res.sendFile(path.join(__dirname,"../frontend","dist","index.html"))
-    })
-}
+//     app.get('/*', (req, res) => {
+//         res.sendFile(path.join(__dirname,"../frontend","dist","index.html"))
+//     })
+// }
 
 mongoose.connect(process.env.MONGO_URI).then(()=>{
     server.listen(PORT,()=>{
         console.log(`The server is running on port ${PORT}`)
     })
-    server.keepAliveTimeout = 120 * 1000;
-    server.headersTimeout = 120 * 1000;
+    // server.keepAliveTimeout = 120 * 1000;
+    // server.headersTimeout = 120 * 1000;
 })
 
