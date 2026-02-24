@@ -62,7 +62,6 @@ export default function UserMessage() {
     if (viewRef.current) {
       viewRef.current.scrollIntoView({ behavior: "auto" });
     }
-    console.log("user ", user);
   }, [messages]);
 
   return (

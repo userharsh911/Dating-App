@@ -104,7 +104,6 @@ const userStore = create((set, get) => ({
 
   blockPerson : async(id)=>{
     try {
-      console.log("bll=ocking")
       const response = await axiosInstance.put(`/main/blockperson?user=${id}`);
       set({user:response.data.updatedUser});
       return response.data.updatedUser;
@@ -114,7 +113,6 @@ const userStore = create((set, get) => ({
   },
   unblockPerson : async(id)=>{
     try {
-      console.log("unblocking...")
       const response = await axiosInstance.put(`/main/unblockperson?user=${id}`);
       set({user:response.data.updatedUser});
       return response.data.updatedUser;

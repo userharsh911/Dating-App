@@ -23,10 +23,8 @@ const SignupForm = () => {
       
     const onSubmit = async(data)=>{
         const {name, branch, height, location, age, email, password} = data;
-        console.log("form data ",selectedGender)
         setLoader(true)
         try {
-            console.log(selectedGender=="Male"," true h ya falses");
             if(!/^[A-Za-z]{3,}(?: [A-Za-z]+)*$/.test(name)){
                 return toast.error("Invalid name");
             }
