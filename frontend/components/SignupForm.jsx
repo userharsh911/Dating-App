@@ -1,230 +1,237 @@
-import React, { useEffect, useState } from 'react'
-import { Mail, LockKeyhole, CalendarDays, MapPin , User, Ruler, GraduationCap      } from 'lucide-react';
-import toast, { Toaster } from 'react-hot-toast';
-import { useForm, } from "react-hook-form"
-import userStore from '../store/userStore';
+import React, { useEffect, useState } from 'react';
+import { Mail, LockKeyhole, CalendarDays, MapPin, User, Ruler, GraduationCap } from 'lucide-react';
+import toast from 'react-hot-toast';
+import { useForm } from "react-hook-form";
 import { useNavigate } from 'react-router-dom';
-import ConnectingHeartsCard from './SIdeComponent/ConnectingHeartsCard';
-const SignupForm = () => {
-    const {SignUpAccount, user, UpdateUserProfile, LoginAccount} = userStore(state=>state);
-    const {register, handleSubmit, watch} = useForm({
-        defaultValues:{
-            name:user?.name,
-            age:user?.age,
-            height:user?.height,
-            branch:user?.branch,
-            location:user?.location,
+import { motion } from 'framer-motion';
+import userStore from '../store/userStore';
+import ConnectingHeartsCard from './SIdeComponent/ConnectingHeartsCard'; // Make sure this path is correct
 
+const SignupForm = () => {
+    const { SignUpAccount, user, UpdateUserProfile, LoginAccount } = userStore(state => state);
+    const { register, handleSubmit, watch } = useForm({
+        defaultValues: {
+            name: user?.name || "",
+            age: user?.age || 20,
+            height: user?.height || "",
+            branch: user?.branch || "",
+            location: user?.location || "",
         }
     });
-    const navigate = useNavigate()
+    const navigate = useNavigate();
     const [loader, setLoader] = useState(false);
-    const [selectedGender, setSelectedGender] = useState(null); 
-      
-    const onSubmit = async(data)=>{
-        const {name, branch, height, location, age, email, password} = data;
-        setLoader(true)
+    const [selectedGender, setSelectedGender] = useState(null);
+
+    const onSubmit = async (data) => {
+        const { name, branch, height, location, age, email, password } = data;
+        
+        if (!/^[A-Za-z]{3,}(?: [A-Za-z]+)*$/.test(name)) {
+            return toast.error("Please enter a valid full name");
+        }
+        if (!user && !/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[A-Za-z]{2,}$/.test(email)) {
+            return toast.error("Invalid email address");
+        }
+        if (!user && !/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/.test(password)) {
+            return toast.error("Password must contain upper, lower, number & special char");
+        }
+        if (age < 14 || age > 30) {
+            return toast.error("Age must be between 14 and 30");
+        }
+        if (!["Male", "Female", "Spectrum"].includes(selectedGender)) {
+            return toast.error("Please select your gender");
+        }
+
         try {
-            if(!/^[A-Za-z]{3,}(?: [A-Za-z]+)*$/.test(name)){
-                return toast.error("Invalid name");
-            }
-            else if(!user && !/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[A-Za-z]{2,}$/.test(email)){
-                return toast.error("Invalid email");
-            }
-            else if(!user && !/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/.test(password)){
-                return toast.error("try a stronger password");
-            }
-            else if(age<14 || age > 30){
-                return toast.error("invalid age provided");
-            }
-            if(selectedGender != "Male" || selectedGender !="Female" || selectedGender !="Spectrum"){
-                if(!user){
-                    toast.promise(
-                        SignUpAccount({name, email, password, age, gender:selectedGender}).then(()=>{
-                            setLoader(false);
-                            LoginAccount({email, password}).then(()=>{
-                                navigate('/')
-                            })
-    
-                        }),
-                        {
-                            loading: 'signing... ⏳',
-                            success: 'account created 😀',
-                            error: 'Error while creating your account 🥲',
-                        }
-                    )
-                }
-                if(user){
-                    toast.promise(
-                        UpdateUserProfile({name, age, gender:selectedGender, location, branch, height}).then(()=>{
-                            setLoader(false)
-                        }),
-                        {
-                            loading: 'updating... ⏳',
-                            success: 'successfully updated 😀',
-                            error: 'Error while updating your account 🥲',
-                        }
-                    )
-                    document.getElementById("my_modal_7").click();
-                }
-            }else{
-                return toast.error("Select a valid gender");
+            setLoader(true);
+            if (!user) {
+                await toast.promise(
+                    SignUp  ({ name, email, password, age, gender: selectedGender }).then(() => {
+                        return LoginAccount({ email, password }).then(() => navigate('/'));
+                    }),
+                    {
+                        loading: 'Creating your profile... ⏳',
+                        success: 'Welcome aboard! 😀',
+                        error: 'Error while creating account 🥲',
+                    }
+                );
+            } else {
+                await toast.promise(
+                    UpdateUserProfile({ name, age, gender: selectedGender, location, branch, height }),
+                    {
+                        loading: 'Updating profile... ⏳',
+                        success: 'Profile updated successfully 😀',
+                        error: 'Error while updating 🥲',
+                    }
+                );
+                document.getElementById("my_modal_7")?.click();
             }
         } catch (error) {
-            throw error?.response
-        }
-        finally{
-            setLoader(false)
+            toast.error(error || "Something went wrong");
+        } finally {
+            setLoader(false);
         }
     }
+
     const formValues = watch();
 
-    useEffect(()=>{
-        setSelectedGender(user?.gender);
-    },[user?.gender])
+    useEffect(() => {
+        if (user?.gender) {
+            setSelectedGender(user.gender);
+        }
+    }, [user?.gender]);
 
-return (
-    
-    <div className="hero-content h-screen py-30 md:py-0 overflow-y-scroll flex-col gap-16 lg:flex-row-reverse">
-        <div className={` ${user && 'hidden' } text-center lg:text-left`}>
-            <ConnectingHeartsCard/>
-        </div>
-        <div className="card shrink-0 w-full max-w-sm shadow-2xl bg-base-100">
-            <form className="card-body flex flex-col gap-7" onSubmit={handleSubmit(onSubmit)}>
-                {!user && <p className='text-end'>
-                    Already Member?
-                    <span 
-                        onClick={()=>navigate('/login')} 
-                        className='text-blue-400 cursor-pointer'
+    const containerVariants = {
+        hidden: { opacity: 0 },
+        show: {
+            opacity: 1,
+            transition: { staggerChildren: 0.1 }
+        }
+    };
+
+    const itemVariants = {
+        hidden: { opacity: 0, y: 15 },
+        show: { opacity: 1, y: 0, transition: { duration: 0.4 } }
+    };
+
+    return (
+        <div className="hero-content h-screen py-10 md:py-0 overflow-y-auto flex-col gap-10 lg:gap-16 lg:flex-row-reverse bg-base-200/50">
+            
+            {/* Side Card */}
+            <div className={` ${user ? 'hidden' : 'flex'} flex-1 w-full justify-center lg:justify-start`}>
+                <ConnectingHeartsCard />
+            </div>
+
+            {/* Form Section */}
+            <motion.div 
+                initial={{ opacity: 0, x: -30 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ duration: 0.6 }}
+                className="card shrink-0 w-full max-w-md shadow-2xl bg-base-100 rounded-[2rem] border border-base-300/50 my-10"
+            >
+                <div className="card-body p-8">
+                    <div className="mb-2">
+                        <h2 className="text-2xl font-bold text-base-content">
+                            {user ? 'Edit Profile' : 'Create Account'}
+                        </h2>
+                        {!user && (
+                            <p className='text-sm text-base-content/60 mt-1'>
+                                Already a member?{' '}
+                                <span onClick={() => navigate('/login')} className='text-primary font-bold cursor-pointer hover:underline transition-all'>
+                                    Sign In
+                                </span>
+                            </p>
+                        )}
+                    </div>
+
+                    <motion.form 
+                        variants={containerVariants}
+                        initial="hidden"
+                        animate="show"
+                        className="flex flex-col gap-4 mt-4" 
+                        onSubmit={handleSubmit(onSubmit)}
                     >
-                        {' sign in'}
-                    </span>
-                </p>}
-                <div className="form-control">
-                    <div className="flex items-center justify-center border-b-2 border-base-300 pb-2 gap-3">
-                        <User  size={16} strokeWidth={1} />
-                        <input 
-                            {...register("name")}
-                            type="text" placeholder="John doe" 
-                            className="input border-none shadow-none outline-none" 
-                            required 
-                        />
-                    </div>
-                </div>
-                {!user && <div className="form-control">
-                    <div className="flex items-center justify-center border-b-2 border-base-300 pb-2 gap-3">
-                        <Mail size={16} strokeWidth={1} />
-                        <input 
-                            {...register("email",{required:false})}
-                            type="email" placeholder="email" 
-                            className="input border-none shadow-none outline-none" 
-                        />
-                    </div>
-                </div>}
-                {!user && <div className="form-control">
-                    <label className="label">
-                        
-                    </label>
-                    <div className="flex items-center justify-center border-b-2 border-base-300 pb-2 gap-3">
-                        <LockKeyhole size={16} strokeWidth={1} />
-                        <input
-                            {...register("password",{required:false})}
-                            type="password" placeholder="password" 
-                            className="input border-none shadow-none outline-none" 
-                        />
-                    </div>
-                </div>}
-                <div className="form-control">
-                    <label className="label">
-                        
-                    </label>
-                    <div className="flex items-center justify-center border-b-2 border-base-300 pb-2 gap-3">
-                        <CalendarDays  size={16} strokeWidth={1} />
-                        <input 
-                            {...register("age")}
-                            type="range" placeholder="age" 
-                            min={14}
-                            defaultValue={20}
-                            max={30}
-                            className="range range-xs range-neutral" 
-                            required
+                        <motion.div variants={itemVariants} className="form-control">
+                            <label className="input input-bordered flex items-center gap-4 rounded-2xl h-14 bg-base-200/50 focus-within:bg-base-100 focus-within:border-primary transition-all">
+                                <User size={18} className="text-base-content/50" />
+                                <input {...register("name")} type="text" placeholder="Full Name" className="grow placeholder:text-base-content/40" required />
+                            </label>
+                        </motion.div>
 
-                        />
-                        <p>{formValues.age}</p>
-                    </div>
-                </div>
-                {user && <div className="form-control">
-                    <label className="label">
-                        
-                    </label>
-                    <div className="flex items-center justify-center border-b-2 border-base-300 pb-2 gap-3">
-                        <MapPin size={16} strokeWidth={1} />
-                        <input 
-                            {...register("location")}
-                            type="text" placeholder="location" 
-                            className="input border-none shadow-none outline-none"  
-                        
-                        />
-                    </div>
-                </div>}
-                {user && <div className="form-control">
-                    <label className="label">
-                        
-                    </label>
-                    <div className="flex items-center justify-center border-b-2 border-base-300 pb-2 gap-3">
-                        <Ruler  size={16} strokeWidth={1} />
-                        <input 
-                            {...register("height")}
-                            type="number" placeholder="height" 
-                            className="input border-none shadow-none outline-none"  
-                        
-                        />
-                    </div>
-                </div>}
-                {user && <div className="form-control">
-                    <label className="label">
-                        
-                    </label>
-                    <div className="flex items-center justify-center border-b-2 border-base-300 pb-2 gap-3">
-                        <GraduationCap   size={16} strokeWidth={1} />
-                        <input 
-                            {...register("branch")}
-                            type="text" placeholder="Course/Branch" 
-                            className="input border-none shadow-none outline-none"  
-                        
-                        />
-                    </div>
-                </div>}
-                <div className="form-control">
-                    <label className="label">
-                        
-                    </label>
-                    <div className="">
-                        <p className='pb-6'>Select gender :</p>
-                        <div className="filter">
-                            <input className="btn filter-reset" onClick={()=>setSelectedGender('')} type="radio" name="metaframeworks" aria-label="X"/>
-                            <input className="btn" type="radio" checked={selectedGender=="Male"} onChange={()=>setSelectedGender("Male")} name="metaframeworks" aria-label="Male"/>
-                            <input className="btn" type="radio" checked={selectedGender=="Female"} onChange={()=>setSelectedGender("Female")} name="metaframeworks" aria-label="Female"/>
-                            <input className="btn" type="radio" checked={selectedGender=="Spectrum"} onChange={()=>setSelectedGender("Spectrum")} name="metaframeworks" aria-label="Spectrum"/>
+                        {!user && (
+                            <motion.div variants={itemVariants} className="form-control">
+                                <label className="input input-bordered flex items-center gap-4 rounded-2xl h-14 bg-base-200/50 focus-within:bg-base-100 focus-within:border-primary transition-all">
+                                    <Mail size={18} className="text-base-content/50" />
+                                    <input {...register("email", { required: true })} type="email" placeholder="Email Address" className="grow placeholder:text-base-content/40" />
+                                </label>
+                            </motion.div>
+                        )}
 
-                        </div>
-                    </div>
-                </div>
-                <div className="form-control mt-6">
-                    {
-                        !user ?
-                        (loader ? <button className="btn btn-primary">Signing...</button> :
-                        <button className="btn btn-primary">Sign Up</button>) :
-                        (loader ? <button className="btn btn-primary" disabled>Editing...</button> :
-                        <button className="btn btn-primary">Edit</button>)
-                    }
+                        {!user && (
+                            <motion.div variants={itemVariants} className="form-control">
+                                <label className="input input-bordered flex items-center gap-4 rounded-2xl h-14 bg-base-200/50 focus-within:bg-base-100 focus-within:border-primary transition-all">
+                                    <LockKeyhole size={18} className="text-base-content/50" />
+                                    <input {...register("password", { required: true })} type="password" placeholder="Password" className="grow placeholder:text-base-content/40" />
+                                </label>
+                            </motion.div>
+                        )}
 
+                        <motion.div variants={itemVariants} className="form-control px-2 mt-2">
+                            <div className="flex items-center gap-4 w-full">
+                                <CalendarDays size={18} className="text-base-content/50" />
+                                <div className="flex-grow flex flex-col">
+                                    <div className="flex justify-between text-xs text-base-content/60 mb-2">
+                                        <span>Age</span>
+                                        <span className="font-bold text-primary bg-primary/10 px-2 py-0.5 rounded-md">{formValues.age} yrs</span>
+                                    </div>
+                                    <input {...register("age")} type="range" min={14} max={30} className="range range-xs range-primary" required />
+                                </div>
+                            </div>
+                        </motion.div>
+
+                        {user && (
+                            <>
+                                <motion.div variants={itemVariants} className="form-control">
+                                    <label className="input input-bordered flex items-center gap-4 rounded-2xl h-14 bg-base-200/50 focus-within:bg-base-100 focus-within:border-primary transition-all">
+                                        <MapPin size={18} className="text-base-content/50" />
+                                        <input {...register("location")} type="text" placeholder="Location" className="grow placeholder:text-base-content/40" />
+                                    </label>
+                                </motion.div>
+
+                                <motion.div variants={itemVariants} className="form-control">
+                                    <label className="input input-bordered flex items-center gap-4 rounded-2xl h-14 bg-base-200/50 focus-within:bg-base-100 focus-within:border-primary transition-all">
+                                        <Ruler size={18} className="text-base-content/50" />
+                                        <input {...register("height")} type="number" placeholder="Height (cm)" className="grow placeholder:text-base-content/40" />
+                                    </label>
+                                </motion.div>
+
+                                <motion.div variants={itemVariants} className="form-control">
+                                    <label className="input input-bordered flex items-center gap-4 rounded-2xl h-14 bg-base-200/50 focus-within:bg-base-100 focus-within:border-primary transition-all">
+                                        <GraduationCap size={18} className="text-base-content/50" />
+                                        <input {...register("branch")} type="text" placeholder="Course / Branch" className="grow placeholder:text-base-content/40" />
+                                    </label>
+                                </motion.div>
+                            </>
+                        )}
+
+                        <motion.div variants={itemVariants} className="form-control mt-2">
+                            <p className='text-sm text-base-content/70 mb-3 px-1'>I identify as:</p>
+                            <div className="flex gap-2 flex-wrap">
+                                {['Male', 'Female', 'Spectrum'].map((gender) => (
+                                    <button
+                                        key={gender}
+                                        type="button"
+                                        onClick={() => setSelectedGender(gender)}
+                                        className={`btn flex-1 rounded-2xl h-12 transition-all ${
+                                            selectedGender === gender 
+                                                ? 'btn-primary shadow-md shadow-primary/30' 
+                                                : 'btn-outline border-base-300 hover:bg-base-200 hover:border-base-300'
+                                        }`}
+                                    >
+                                        {gender}
+                                    </button>
+                                ))}
+                            </div>
+                        </motion.div>
+
+                        <motion.div variants={itemVariants} className="form-control mt-6">
+                            <motion.button 
+                                whileHover={{ scale: 1.02 }}
+                                whileTap={{ scale: 0.97 }}
+                                className="btn btn-primary w-full rounded-2xl h-14 text-lg font-semibold shadow-lg shadow-primary/30"
+                                disabled={loader}
+                            >
+                                {loader ? (
+                                    <span className="loading loading-dots loading-md"></span>
+                                ) : (
+                                    user ? 'Save Changes' : 'Sign Up'
+                                )}
+                            </motion.button>
+                        </motion.div>
+                    </motion.form>
                 </div>
-            </form>
+            </motion.div>
         </div>
-    </div>
-    
-);
+    );
 }
 
 export default SignupForm;

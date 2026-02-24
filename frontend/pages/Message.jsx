@@ -11,7 +11,7 @@ const Message = () => {
     getAllMessageUsers();
   },[user]);
   return (
-    <div className='w-full bg-red-400'>
+    <div className='w-fu"ll h-full flex items-center justify-center'>
       <UserMessage/>
     </div>
   )
