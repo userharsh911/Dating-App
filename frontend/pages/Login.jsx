@@ -40,7 +40,7 @@ const Login = () => {
 
     return (
         // Subtle romantic gradient background
-        <div className='flex justify-center items-center min-h-screen bg-gradient-to-br from-primary/10 via-base-200 to-secondary/10 px-4'>
+        <div className='flex justify-center items-center min-h-screen bg-linear-to-br from-primary/10 via-base-200 to-secondary/10 px-4'>
             
             {/* Framer Motion Card Container */}
             <motion.div 
@@ -68,8 +68,8 @@ const Login = () => {
                     <form className="flex flex-col gap-5" onSubmit={loginSubmit}>
                         
                         {/* Email Input */}
-                        <div className="form-control">
-                            <label className="input input-bordered flex items-center gap-4 rounded-2xl h-14 bg-base-200/50 focus-within:bg-base-100 focus-within:border-primary transition-all">
+                        <div className="form-control flex justify-center">
+                            <label className="input input-bordered w-full flex items-center gap-4 rounded-2xl h-14 bg-base-200/50 focus-within:bg-base-100 focus-within:border-primary transition-all">
                                 <Mail size={18} className="text-base-content/50" />
                                 <input 
                                     onChange={(e) => setEmail(e.target.value)} 
@@ -82,8 +82,8 @@ const Login = () => {
                         </div>
 
                         {/* Password Input */}
-                        <div className="form-control">
-                            <label className="input input-bordered flex items-center gap-4 rounded-2xl h-14 bg-base-200/50 focus-within:bg-base-100 focus-within:border-primary transition-all">
+                        <div className="form-control flex justify-center">
+                            <label className="input input-bordered w-full flex items-center gap-4 rounded-2xl h-14 bg-base-200/50 focus-within:bg-base-100 focus-within:border-primary transition-all">
                                 <LockKeyhole size={18} className="text-base-content/50" />
                                 <input 
                                     onChange={(e) => setPassword(e.target.value)} 
@@ -93,9 +93,6 @@ const Login = () => {
                                     required 
                                 />
                             </label>
-                            <div className="flex justify-end mt-2">
-                                <span className="text-xs text-base-content/60 hover:text-primary cursor-pointer transition-colors">Forgot Password?</span>
-                            </div>
                         </div>
 
                         {/* Submit Button */}

@@ -94,33 +94,18 @@ const SignupForm = () => {
     };
 
     return (
-        <div className="hero-content h-screen py-10 md:py-0 overflow-y-auto flex-col gap-10 lg:gap-16 lg:flex-row-reverse bg-base-200/50">
-            
-            {/* Side Card */}
-            <div className={` ${user ? 'hidden' : 'flex'} flex-1 w-full justify-center lg:justify-start`}>
-                <ConnectingHeartsCard />
-            </div>
-
-            {/* Form Section */}
+        <div className="hero-content w-full h-screen py-10 md:py-0 overflow-y-auto gap-10 lg:gap-16">
             <motion.div 
                 initial={{ opacity: 0, x: -30 }}
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ duration: 0.6 }}
-                className="card shrink-0 w-full max-w-md shadow-2xl bg-base-100 rounded-[2rem] border border-base-300/50 my-10"
+                className="card w-full max-w-md shadow-2xl bg-base-100 rounded-4xl border border-base-300/50 my-10"
             >
                 <div className="card-body p-8">
                     <div className="mb-2">
-                        <h2 className="text-2xl font-bold text-base-content">
+                        <h2 className="text-3xl text-center font-bold text-base-content">
                             {user ? 'Edit Profile' : 'Create Account'}
                         </h2>
-                        {!user && (
-                            <p className='text-sm text-base-content/60 mt-1'>
-                                Already a member?{' '}
-                                <span onClick={() => navigate('/login')} className='text-primary font-bold cursor-pointer hover:underline transition-all'>
-                                    Sign In
-                                </span>
-                            </p>
-                        )}
                     </div>
 
                     <motion.form 
@@ -130,16 +115,16 @@ const SignupForm = () => {
                         className="flex flex-col gap-4 mt-4" 
                         onSubmit={handleSubmit(onSubmit)}
                     >
-                        <motion.div variants={itemVariants} className="form-control">
-                            <label className="input input-bordered flex items-center gap-4 rounded-2xl h-14 bg-base-200/50 focus-within:bg-base-100 focus-within:border-primary transition-all">
+                        <motion.div variants={itemVariants} className="form-control flex justify-center">
+                            <label className="input input-bordered flex items-center gap-4 w-full rounded-2xl h-14 bg-base-200/50 focus-within:bg-base-100 focus-within:border-primary transition-all">
                                 <User size={18} className="text-base-content/50" />
                                 <input {...register("name")} type="text" placeholder="Full Name" className="grow placeholder:text-base-content/40" required />
                             </label>
                         </motion.div>
 
                         {!user && (
-                            <motion.div variants={itemVariants} className="form-control">
-                                <label className="input input-bordered flex items-center gap-4 rounded-2xl h-14 bg-base-200/50 focus-within:bg-base-100 focus-within:border-primary transition-all">
+                            <motion.div variants={itemVariants} className="form-control flex justify-center">
+                                <label className="input input-bordered flex items-center gap-4 w-full rounded-2xl h-14 bg-base-200/50 focus-within:bg-base-100 focus-within:border-primary transition-all">
                                     <Mail size={18} className="text-base-content/50" />
                                     <input {...register("email", { required: true })} type="email" placeholder="Email Address" className="grow placeholder:text-base-content/40" />
                                 </label>
@@ -147,8 +132,8 @@ const SignupForm = () => {
                         )}
 
                         {!user && (
-                            <motion.div variants={itemVariants} className="form-control">
-                                <label className="input input-bordered flex items-center gap-4 rounded-2xl h-14 bg-base-200/50 focus-within:bg-base-100 focus-within:border-primary transition-all">
+                            <motion.div variants={itemVariants} className="form-control flex justify-center">
+                                <label className="input input-bordered w-full flex items-center gap-4 rounded-2xl h-14 bg-base-200/50 focus-within:bg-base-100 focus-within:border-primary transition-all">
                                     <LockKeyhole size={18} className="text-base-content/50" />
                                     <input {...register("password", { required: true })} type="password" placeholder="Password" className="grow placeholder:text-base-content/40" />
                                 </label>
@@ -157,10 +142,9 @@ const SignupForm = () => {
 
                         <motion.div variants={itemVariants} className="form-control px-2 mt-2">
                             <div className="flex items-center gap-4 w-full">
-                                <CalendarDays size={18} className="text-base-content/50" />
-                                <div className="flex-grow flex flex-col">
+                                <div className="grow flex flex-col">
                                     <div className="flex justify-between text-xs text-base-content/60 mb-2">
-                                        <span>Age</span>
+                                        <span className='font-bold text-sm'>Age</span>
                                         <span className="font-bold text-primary bg-primary/10 px-2 py-0.5 rounded-md">{formValues.age} yrs</span>
                                     </div>
                                     <input {...register("age")} type="range" min={14} max={30} className="range range-xs range-primary" required />
@@ -194,7 +178,7 @@ const SignupForm = () => {
                         )}
 
                         <motion.div variants={itemVariants} className="form-control mt-2">
-                            <p className='text-sm text-base-content/70 mb-3 px-1'>I identify as:</p>
+                            <p className='text-sm text-base-content/70 mb-3 px-1 font-bold'>I identify as:</p>
                             <div className="flex gap-2 flex-wrap">
                                 {['Male', 'Female', 'Spectrum'].map((gender) => (
                                     <button
@@ -228,6 +212,15 @@ const SignupForm = () => {
                             </motion.button>
                         </motion.div>
                     </motion.form>
+                    <div className="divider my-6 text-sm text-base-content/40">OR</div>
+                    {!user && (
+                            <p className='text-sm text-center text-base-content/60 mt-1'>
+                                Already a member?{' '}
+                                <span onClick={() => navigate('/login')} className='text-primary font-bold cursor-pointer hover:underline transition-all'>
+                                    Sign In
+                                </span>
+                            </p>
+                        )}
                 </div>
             </motion.div>
         </div>

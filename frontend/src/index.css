@@ -1,7 +1,9 @@
 @import "tailwindcss";
 @plugin "daisyui";
 
-
+@plugin "daisyui" {
+  themes: all;
+}
 
 @plugin "daisyui/theme" {
   name: "datingtheme";

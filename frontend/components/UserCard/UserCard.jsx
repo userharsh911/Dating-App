@@ -3,8 +3,9 @@ import userStore from "../../store/userStore";
 import messageStore from "../../store/message.store";
 import { MessageCircleMore, User, Heart, Sparkles, MapPin } from "lucide-react";
 import MatchCardSkeleton from "../MatchCardSkeleton/MatchCardSkeleton";
-import { motion } from "motion/react"; // Keeping your specific import
+import { motion } from "motion/react";
 import { useNavigate } from "react-router-dom";
+import userImage from '/user.png';
 import toast from "react-hot-toast";
 
 const UserCard = () => {
@@ -20,7 +21,6 @@ const UserCard = () => {
   const lastUserRef = useRef();
   const observerRef = useRef(null); 
 
-  // --- FETCH LOGIC ---
   useEffect(() => {
     const loadUsers = async () => {
       if (loading) return;
@@ -152,21 +152,26 @@ const UserCard = () => {
                             viewport={{ once: true, margin: "-100px" }}
                             transition={{ type: "spring", stiffness: 100, damping: 20, delay: Math.min(index * 0.1, 0.3) }}
                         >
-                            <div className="relative w-full aspect-[3/4] sm:aspect-[4/5] rounded-[2rem] overflow-hidden shadow-2xl group cursor-pointer bg-neutral border border-base-300/50">
+                            <div className="relative w-full aspect-3/4 sm:aspect-4/5 rounded-4xl overflow-hidden shadow-2xl group cursor-pointer bg-neutral border border-base-300/50">
                                 
-                                {/* Image Layer with slow zoom on hover */}
-                                <motion.img
-                                    src={user.profilePicLink}
-                                    alt={user.name}
-                                    className="absolute inset-0 w-full h-full object-cover"
-                                    whileHover={{ scale: 1.08 }}
-                                    transition={{ duration: 0.8, ease: "easeOut" }}
-                                />
+                                {user?.profilePicLink ? (
+                                    <motion.img
+                                      src={user?.profilePicLink}
+                                      alt={user.name}
+                                      className="absolute inset-0 w-full h-full object-cover"
+                                      whileHover={{ scale: 1.08 }}
+                                      transition={{ duration: 0.8, ease: "easeOut" }}
+                                    />
+                                ) : (
+                                    <div className="absolute inset-0 w-full h-full flex items-center justify-center bg-base-200">
+                                        <User size={64} className="text-base-content/40" />
+                                    </div>
+                                )}
 
                                 {/* Gradient Overlay */}
-                                <div className="absolute inset-0 bg-gradient-to-t from-black/95 via-black/40 to-transparent opacity-90 transition-opacity group-hover:opacity-100" />
+                                <div className="absolute inset-0 bg-linear-to-t from-black/95 via-black/40 to-transparent opacity-90 transition-opacity group-hover:opacity-100" />
 
-                                {/* Status Badge (Top Right) with pop-in animation */}
+                                {/* Status Badge */}
                                 <div className="absolute top-4 right-4 z-20">
                                     {isOnline && (
                                         <motion.div 
@@ -210,7 +215,7 @@ const UserCard = () => {
                                       transition={{ delay: 0.3 }}
                                       className="text-white/80 text-sm line-clamp-2 leading-relaxed"
                                     >
-                                        Lorem ipsum dolor sit amet consectetur adipisicing elit. Building dreams and coding schemes.
+                                      {user.description || "No bio available."}
                                     </motion.p>
 
                                     {/* Action Buttons */}
@@ -274,7 +279,6 @@ const UserCard = () => {
                 )}
               </>
             ) : (
-                // Empty State with floating animation
                 <motion.div 
                   initial={{ opacity: 0, scale: 0.9 }}
                   animate={{ opacity: 1, scale: 1 }}

@@ -75,20 +75,6 @@ const ProfileSecion = ({ editing }) => {
     verified: true,
   };
 
-  const photos = [
-    {
-      id: 1,
-      url: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=400",
-    },
-    {
-      id: 2,
-      url: "https://images.unsplash.com/photo-1517841905240-472988babdf9?w=400",
-    },
-    {
-      id: 3,
-      url: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=400",
-    },
-  ];
 
   const imageUpload = async (e) => {
     e.preventDefault();
@@ -501,7 +487,7 @@ const ProfileSecion = ({ editing }) => {
                             type="text"
                             placeholder="Add interest"
                             ref={hobbyInputRef}
-                            className="input input-bordered join-item w-full sm:w-auto focus:outline-primary"
+                            className="input input-bordered outline-none border-none join-item w-full sm:w-auto focus:outline-primary"
                           />
                           <button
                             className="btn btn-primary join-item"
@@ -598,23 +584,9 @@ const ProfileSecion = ({ editing }) => {
                     animate="visible"
                     className="grid grid-cols-2 gap-2 sm:gap-3"
                   >
-                    {photos.map((photo) => (
-                      <motion.div
-                        key={photo.id}
-                        variants={scaleUpItem}
-                        whileHover={{ scale: 1.02 }}
-                        className="relative overflow-hidden rounded-xl shadow-md cursor-pointer"
-                        style={{ aspectRatio: "3/4" }}
-                      >
-                        <motion.img
-                          whileHover={{ scale: 1.1 }}
-                          transition={{ duration: 0.4 }}
-                          src={photo.url}
-                          alt={`Photo ${photo.id}`}
-                          className="w-full h-full object-cover"
-                        />
-                      </motion.div>
-                    ))}
+                    <p className="text-center text-base-content/60 col-span-full mt-8">
+                      coming soon...
+                    </p>
                   </motion.div>
                 )}
               </motion.div>

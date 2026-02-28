@@ -3,12 +3,12 @@ import { Send, X, Menu, Ellipsis, MessageSquareHeart } from "lucide-react";
 import messageStore from "../../store/message.store";
 import { useForm } from "react-hook-form";
 import toast from "react-hot-toast";
-import userImage from "../../public/user.png";
+import userImage from "/user.png";
 import userStore from "../../store/userStore";
 import formatRelativeTime from "../../constant/DateTime";
 import UsersSkeleton from "../UsersSkeleton/UsersSkeleton";
 import { useNavigate } from "react-router-dom";
-import { motion, AnimatePresence } from "framer-motion"; // Added Framer Motion
+import { motion, AnimatePresence } from "framer-motion";
 
 export default function UserMessage() {
   const {
