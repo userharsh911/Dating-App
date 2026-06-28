@@ -7,7 +7,6 @@ export const addToMessageList = async(req,res)=>{
     try {
         const messageToUser = await userSchema.findById(otherUser);
         if(messageToUser.messageList.includes(user._id) || user.messageList.includes(messageToUser._id)){
-            console.log("already in message lsit ")
             return res.status(200).json({message:'already in Message List'});
         }
         messageToUser.messageList.push(user._id)
@@ -54,10 +53,7 @@ export const createMessage = async(req,res)=>{
         if(!messageCreated){
             return res.status(401).json({message:"Error: Try again"});
         }
-        
-        console.log("new message created successfully ",messageCreated);
         const receiverSocketId = getSocketId(receiverId);
-        console.log("chl rh h h  hj")
         io.to(receiverSocketId).emit("sendmessage",{msg:messageCreated,user});
 
         return res.status(201).json({message:"successfully message sent",msg:messageCreated});
@@ -71,7 +67,6 @@ export const getAllMessages = async(req,res)=>{
     const user = req.user;
     const receiverId = req.query.userid
     try {
-        console.log("receiver id h ",receiverId)
         const messages = await MessageSchema.find({
             $or:[{
                 senderId:user._id,
@@ -84,7 +79,6 @@ export const getAllMessages = async(req,res)=>{
         if(!messages){
             return res.status(401).json({message:"Error: Try again"});
         }
-        console.log("get messages ",messages)
         return res.status(200).json({message:"successfully get",messages})
     } catch (error) {
         console.log("error while fetching messages ",error);

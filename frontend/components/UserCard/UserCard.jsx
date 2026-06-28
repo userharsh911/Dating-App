@@ -92,46 +92,14 @@ const UserCard = () => {
 
   return (
     <div className="h-screen w-full bg-base-100 relative overflow-hidden">
-        {/* Animated Background Decoration */}
-        <div className="absolute top-0 left-0 w-full h-full overflow-hidden pointer-events-none">
-            <motion.div 
-              animate={{ scale: [1, 1.2, 1], opacity: [0.3, 0.5, 0.3] }}
-              transition={{ duration: 10, repeat: Infinity, ease: "easeInOut" }}
-              className="absolute top-[-10%] left-[-10%] w-[500px] h-[500px] bg-primary/20 blur-[120px] rounded-full" 
-            />
-            <motion.div 
-              animate={{ scale: [1, 1.2, 1], opacity: [0.3, 0.5, 0.3] }}
-              transition={{ duration: 12, repeat: Infinity, ease: "easeInOut", delay: 1 }}
-              className="absolute bottom-[-10%] right-[-10%] w-[500px] h-[500px] bg-secondary/20 blur-[120px] rounded-full" 
-            />
-        </div>
-
       <div className="h-full w-full max-w-lg mx-auto relative z-10 flex flex-col">
-        {/* Header with entrance animation */}
-        <motion.div 
-          initial={{ opacity: 0, y: -20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, ease: "easeOut" }}
-          className="px-6 py-4 flex items-center justify-between"
-        >
-            <h1 className="text-3xl font-black text-base-content flex items-center gap-2">
-                Discover 
-                <motion.div
-                  animate={{ rotate: [0, 15, -15, 0] }}
-                  transition={{ repeat: Infinity, duration: 2, ease: "easeInOut" }}
-                >
-                  <Sparkles className="text-yellow-500 fill-yellow-500" size={24} />
-                </motion.div>
-            </h1>
-        </motion.div>
-
         {/* Scrollable Container */}
         <div 
           ref={carouselRef}
           onScroll={handleScroll}
-          className="flex-1 overflow-y-auto overflow-x-hidden px-4 pb-20 scroll-smooth no-scrollbar"
+          className="flex-1  overflow-hidden px-4 py-3 pb-20 md:pb-0 scroll-smooth no-scrollbar"
         >
-          <div className="flex flex-col gap-6 py-4">
+          <div className="carousel carousel-vertical gap-5 rounded-box h-full w-full ">
             
             {initialLoad ? (
               <MatchCardSkeleton />
@@ -141,18 +109,13 @@ const UserCard = () => {
                     const isOnline = onlineUsers.includes(user._id);
                     
                     return (
-                        <motion.div 
+                        <div 
                             key={user._id || index}
                             ref={index === allUsers.length - 1 ? lastUserRef : null}
                             data-index={index}
-                            className="match-card-item w-full"
-                            // Upgraded to Spring physics for a bouncier, premium feel
-                            initial={{ opacity: 0, y: 80, scale: 0.9 }}
-                            whileInView={{ opacity: 1, y: 0, scale: 1 }}
-                            viewport={{ once: true, margin: "-100px" }}
-                            transition={{ type: "spring", stiffness: 100, damping: 20, delay: Math.min(index * 0.1, 0.3) }}
+                            className="carousel-item h-full"
                         >
-                            <div className="relative w-full aspect-3/4 sm:aspect-4/5 rounded-4xl overflow-hidden shadow-2xl group cursor-pointer bg-neutral border border-base-300/50">
+                            <div className="relative w-full h-full aspect-3/4 sm:aspect-4/5 rounded-4xl overflow-hidden shadow-2xl group cursor-pointer bg-neutral border border-base-300/50">
                                 
                                 {user?.profilePicLink ? (
                                     <motion.img
@@ -249,7 +212,7 @@ const UserCard = () => {
                                     </motion.div>
                                 </div>
                             </div>
-                        </motion.div>
+                        </div>
                     );
                 })}
 

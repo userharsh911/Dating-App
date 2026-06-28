@@ -2,7 +2,7 @@ import React from "react";
 
 const MatchCardSkeleton = () => {
   return (
-    <div className="h-screen w-[450px] p-6 flex flex-col gap-6 items-center">
+    <div className="carousel-item h-full">
       <div className="flex flex-col h-full w-full max-w-md gap-4 bg-base-200 rounded-2xl p-4 shadow-lg animate-pulse">
         {/* Profile Image Skeleton */}
         <div className="skeleton h-24 w-24 rounded-full shrink-0"></div>

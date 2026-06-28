@@ -69,13 +69,8 @@ export default function UserMessage() {
   return (
     <div className="flex h-screen w-full pb-18 md:pb-0 bg-base-200 overflow-hidden">
       {/* Left Sidebar - Users List */}
-      <AnimatePresence>
         {(!isChatOpen || window.innerWidth >= 768) && (
-          <motion.div
-            initial={{ x: -300, opacity: 0 }}
-            animate={{ x: 0, opacity: 1 }}
-            exit={{ x: -300, opacity: 0 }}
-            transition={{ type: "spring", stiffness: 260, damping: 20 }}
+          <div
             className={`${
               isChatOpen ? "hidden md:flex" : "flex"
             } w-full md:w-80 lg:w-96 bg-base-100 border-r border-base-300 flex-col z-10 shadow-lg`}
@@ -102,11 +97,8 @@ export default function UserMessage() {
             ) : (
               <div className="overflow-y-auto px-3 flex-1 py-4 scroll-smooth no-scrollbar">
                 <ul className="menu menu-lg w-full p-0 gap-1">
-                  {allMessageUsers?.map((usr, index) => (
-                    <motion.div
-                      initial={{ opacity: 0, y: 20 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      transition={{ delay: index * 0.05, type: "spring", stiffness: 300, damping: 24 }}
+                  {allMessageUsers?.map((usr) => (
+                    <div
                       key={usr._id}
                       className={`flex w-full py-2 px-3 rounded-2xl justify-between items-center transition-colors ${
                         selectedMessageUser?._id == usr._id ? "bg-primary/10 border border-primary/20" : "hover:bg-base-200"
@@ -170,24 +162,19 @@ export default function UserMessage() {
                           )}
                         </ul>
                       </div>
-                    </motion.div>
+                    </div>
                   ))}
                   {!allMessageUsers && <UsersSkeleton />}
                 </ul>
               </div>
             )}
-          </motion.div>
+          </div>
         )}
-      </AnimatePresence>
 
       {/* Right Side - Chat Area */}
-      <div className={`${!isChatOpen ? "hidden md:flex" : "flex"} flex-1 flex-col relative bg-base-200/50`}>
+      <div className={`${!isChatOpen ? "hidden md:flex" : "flex"} flex flex-1 flex-col relative bg-base-200/50`}>
         {selectedMessageUser ? (
-          <motion.div 
-            key={selectedMessageUser._id} // Re-animates when user changes
-            initial={{ opacity: 0, scale: 0.98 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 0.3 }}
+          <div 
             className="flex flex-col h-full w-full"
           >
             {/* Chat Header */}
@@ -338,7 +325,7 @@ export default function UserMessage() {
                 )}
               </div>
             </form>
-          </motion.div>
+          </div>
         ) : (
           /* Empty State - Desktop Only */
           <motion.div 

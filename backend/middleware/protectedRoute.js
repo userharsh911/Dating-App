@@ -4,7 +4,6 @@ const protectedRoute = async(req,res,next)=>{
     try {
         const token = req.cookies.useridToken;
 
-        console.log("message ",req.cookies)
         if(!token){
             return res.status(401).json({message:"Unauthorized: Invalid token"});
         }
@@ -12,7 +11,6 @@ const protectedRoute = async(req,res,next)=>{
         if(!verifiedToken){
             return res.status(401).json({message:"Unauthorized: Invalid token"});
         }
-        console.log(verifiedToken);
         const user = await userSchema.findById(verifiedToken.userid)
         if(!user){
             return res.status(401).json({message:"Unauthorized: user not found"});
